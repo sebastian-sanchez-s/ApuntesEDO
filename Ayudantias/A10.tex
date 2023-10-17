@@ -1,0 +1,191 @@
+\input{../pheader}
+
+\newgeometry{margin=1in}
+
+\begin{document}
+
+{\sc Ayudantía 10 - EDO \hfill \small \rm Apuntes: Sebastian Sánchez}
+
+\begin{center}
+    \begin{tabular}{rl}
+        Docente:& Nikola Kamburov\\
+        Ayudante:& Jorge Acuña
+    \end{tabular}
+\end{center}
+
+% P1
+\begin{problema}
+    \begin{enumerate}
+        \item
+        Considere la ecuación
+        \[
+            P(x)y'' + Q(x)y' + R(x)y = -zy
+        .\]
+        Escríbala en la forma de Sturm-Liouville
+        \[
+            -(p(x)y')' + (q(x)-z\,r(x))y = 0
+        \]
+        donde \(z\in \mathbb{C}\).
+
+        \item
+        Encuentre la forma del operador de Sturm-Liouville para
+        \[
+            \begin{cases}
+                -xy''-(1-x)y' = zy &, x\in (1,2)\\
+                y(1) = y(2) = 0
+            \end{cases}
+        .\]
+    \end{enumerate}
+\end{problema}
+\begin{enumerate}
+\item
+Multiplicando la ecuación por el factor integrante
+\[
+    \Phi(x) = \frac{1}{P(x)}\exp\left(\int_{t_0}^{x} \frac{Q(t)}{P(t)} dt\right)
+\]
+la ecuación se expresa como (abusando notación para fines estéticos)
+\begin{align*}
+    y''\,e^{\int Q/P} + \frac{Q}{P}\,e^{\int Q/P} y' + Ry\Phi &= -zy\Phi\\
+    (y'\, e^{\int Q/P})' + Ry\phi &= -zy\Phi\\
+    -(y'\, \underbrace{e^{\int Q/P}}_{p})' + (\underbrace{-R\phi}_{q} -
+    z\underbrace{\Phi}_{r}) y &= 0\\
+    -(py')' + (q-z\,r)y &= 0
+\end{align*}
+llegándose a lo querido.
+
+\item
+\end{enumerate}
+
+% P2
+\begin{problema}
+\begin{enumerate}[leftmargin=1em,itemsep=.5em]
+	\item
+	Encuentre criterio sobre los parámetros \(\alpha, \beta \in \mathbb{R}\)
+	para que el problema
+	\[
+		\begin{cases}
+			y''(0) = 0 &, t\in (0,1)\\
+			y'(0) = \alpha y(0) &, y'(1) = \beta y(1)
+		\end{cases}
+	\]
+	tenga solo solución nula.
+
+	\item
+	Suponga que se cumple el criterio de la parte anterior. Encuentre función
+	continua \(G\colon [0,1]^2 \to \mathbb{R}\) tal que para cada \(f\in
+	\mathcal{C}[0,1]\) la solución al problema
+	\[
+		\begin{cases}
+			-y'' = f &, t\in (0,1)\\
+			y'(0) = \alpha y(0) &, y'(1) = \beta y(1)
+		\end{cases}
+	.\]
+	se escribe como
+	\[
+		y(t) = \int_{0}^{1} G(t,s) f(s) ds, \quad t\in [0,1]
+	.\]
+\end{enumerate}
+\end{problema}
+% R2
+\begin{enumerate}[leftmargin=1em,itemsep=.5em]
+	\item % 2.1
+	Como la segunda derivada de \(y\) es nula, esta debe ser una función lineal
+	de la forma \(y(t) = at + b\) que asumiremos no nula (i.e. \(a\ne 0\)).
+
+	Aplicando las condiciones de frontera obtenemos que
+	\[
+		\begin{cases}
+			a = y'(0) = \alpha y(0) = \alpha b\\
+			a = y'(1) = \beta y(1) = \beta (a+b)
+		\end{cases}
+	\]
+	Notar que \(\alpha \ne -1\) y \(b\ne 0\), pues en esos caso \(a\) es
+	necesariamente \(0\), lo cual no puede pasar ya que la suposición es que
+	\(y\) es una función lineal no nula. Luego:
+	\[
+		\beta = \frac{\alpha}{\alpha+1}
+	\]
+	Así, para que \(y\) sea la función nula es necesario que \(\alpha = -1\) o
+	bien \(\beta \ne \alpha/(\alpha+1)\).
+
+	\item % 2.2
+	El operador de Sturm-Liouville asociado al sistema es
+	\[
+		L = -\frac{d^2}{dx^2}; \hspace{.5cm}
+		B_0 \colon y'(0) = \alpha y(0); \hspace{.5cm}
+		B_1 \colon y'(1) = \beta y(1)
+	.\]
+	Por la parte anterior, si \(\beta \ne \alpha/(\alpha+1)\) el operador \(L-0 = L\)
+	es invertible y la solución \(y\) está dada por la fórmula:
+	\[
+		y(t)
+		=
+		W^{-1}\, \left(
+		\int_{0}^{t} u^{1}(t) u^{0}(s) f(s) ds
+		+
+		\int_{t}^{1} u^{0}(t) u^{1}(s) f(s) ds
+		\right)
+	.\]
+	Donde \(W^{-1}\) es el Wronskiano modificado y \(u^{i}\) es una solución del
+	del problema \(Lu^{i} = 0\) con condición iniciales \(B_i\).
+	Resolviendo los problemas correspondientes obtenemos que \(u^{0}(t) = \alpha t + 1\) y \(u^{1}(t)
+	= \beta (t-1) + 1\). De esta forma:
+	\[
+		W
+		=
+		u^{0}(t) \frac{d}{dt} u^{1}(t) - u^{1}(t) \frac{d}{dt} u^{0}(t)
+		\overset{t=0}{=}
+		\beta - (1-\beta)\alpha
+		=
+		\beta (1+\alpha) - \alpha
+		\ne 0
+	.\]
+	Y la función \(G\) queda definida como
+	\[
+		G(t,s) = -W^{-1}\,
+		\begin{cases}
+			u^{1}(t) u^{0}(s) &, s \le t\\
+			u^{0}(t) u^{1}(s) &, s \ge t\\
+		\end{cases}
+	.\]
+\end{enumerate}
+
+% P3
+\begin{problema}
+	Sea \(\theta \in \mathbb{S}^{1} \coloneqq \left\{ z\in \mathbb{C}\colon \abs{z} = 1
+	\right\}\), \(q = \bar{q} \in \mathcal{C}\left[0,2\pi\right]\). Definamos el operador,
+	\[
+		L_{q,\theta} \coloneqq -\frac{d^2}{dt^2} + q
+	\]
+	con dominio \(\mathcal{D}(L_{q,\theta}) = \left\{ u\in
+	\mathcal{C}^2\left[0,2\pi\right]\colon u(2\pi) = \theta u(0),\, u'(2\pi) = \theta
+	u'(0)\right\}\).
+	\begin{enumerate}
+		\item Demuestre que \(L_{q,\theta}\) es simétrico en
+		\(L^{2}\left(0,2\pi\right)\).
+		\item Suponga que \(q(t) = 1\) para todo \(t\in \left[0,2\pi\right]\). Halle
+		explícitamente los valores propios de \(L_{1,\theta}\) y las funciones
+		propias correspondientes para \(\theta \in \mathbb{S}^{1}\). Encuentre
+		el conjunto:
+		\[
+			\left\{ \theta \in \mathbb{S}^1 \colon \text{Todos los valores
+			propios de \(L_{1,\theta}\) son simples}\right\}
+		.\]
+	\end{enumerate}
+\end{problema}
+\begin{enumerate}
+	\item % P3.1
+	Sean \(u, v \in \mathcal{D}(L)\), luego:
+	\begin{align*}
+		\langle v, L_{q,\theta} u\rangle - \langle L_{q,\theta} v, u\rangle
+		&=
+		\int_{0}^{2\pi} \overline{v(t)} (-u''(t) + u(t) q(t)) dt
+		-
+		\int_{0}^{2\pi} \overline{(-v''(t) + v(t) q(t))} u(t) dt
+		\\&=
+		\int_{0}^{2\pi} -\overline{v(t)} u''(t) dt
+		-
+		\int_{0}^{2\pi} - \overline{v''(t)} u(t) dt
+	\end{align*}
+\end{enumerate}
+\end{document}

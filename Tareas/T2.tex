@@ -1,0 +1,1331 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{tikz,pgfplots}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usetikzlibrary{babel}
+
+\usepackage{mdframed}
+
+\usepackage{amstext} % for \text macro
+\usepackage{array}   % for \newcolumntype macro
+\newcolumntype{C}{>{$}c<{$}} % math-mode version of "c" column type
+\newcolumntype{L}{>{$}l<{$}} % math-mode version of "l" column type
+
+\newcounter{problemctr}[section]
+\newenvironment{problema}{
+    \refstepcounter{problemctr}
+    \mdfsetup{%
+        frametitle={\tikz\node[fill=white,rectangle,inner sep=1pt,outer
+        sep=1pt]{Problema \theproblemctr};},
+        frametitleaboveskip=-0.5\ht\strutbox,
+        frametitlealignment=\center
+    }%
+    \begin{mdframed}[style=exampledefault]
+    }{\end{mdframed}
+}
+
+\newlist{plist}{enumerate}{1}
+\setlist[plist]{label=(\alph*),leftmargin=2em,rightmargin=2em,itemindent=2pt,itemsep=0pt,topsep=0pt}
+
+\newlist{clist}{itemize}{1}
+\setlist[clist]{label=\(\bullet\), listparindent=1em, leftmargin=2pt,itemindent=2pt}
+
+\usepackage[T1]{fontenc}
+
+%\usepackage{subfiles}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\newcommand\sideToSide[3]%
+{
+    \begin{minipage}{#1\textwidth}
+       #2
+    \end{minipage}
+    \begin{minipage}{\dimexpr\textwidth-#1\textwidth}
+       #3
+    \end{minipage}
+}
+
+%\begin{document}
+%    \subfile{Ayudantias/A5}
+%    \subfile{Ayudantias/A10}
+%\end{document}
+
+
+\DeclareMathOperator\Div{div}
+\DeclareMathOperator\tr{tr}
+\DeclareMathOperator\vol{Vol}
+
+\usetikzlibrary{intersections}
+\begin{document}
+
+{\sc Tarea 2 - EDO\hfill Sebastián Sánchez}
+
+\begin{center}
+Colaboradores:
+        Felipe González, Pablo Navarro, Camila Guajardo Vasquéz
+\end{center}
+
+%P1
+\begin{problema}
+\begin{plist}
+    \item Sea \(f\in \mathcal{C}^1(\mathbb{R}^n, \mathbb{R}^n)\) y sea \(\phi =
+    \phi(t,x)\) la función del flujo asociada a la ecuación autónoma \(\dot{u} =
+    f(u)\). Defina
+    \[
+        J(t,x_0) \coloneqq \det\left(\frac{\partial \phi}{\partial x} (t,x_0)\right)
+    .\]
+    Demuestre que \(J \in \mathcal{C}^1(I\times B)\) para algún cilindro
+    \(I\times B\) en torno de \((0,x_0)\) y que \(J(\cdot, x_0)\) resuelve el PVI
+    \[
+        \dot{J} = \Div f\left(\phi(t,x_0)\right)J, \quad t\in I
+        \quad;\quad
+        J(0,x_0) = 1
+    .\]
+
+    \item Considere el sistema autónomo
+    \[
+        \begin{cases}
+            \dot{x} = \partial_p H(x,p), &\dot{p} = -\partial_x H(x,p)\\
+            x(0) = x_0 \in \mathbb{R}^n, &p(0) = p_0 \in \mathbb{R}^n
+        \end{cases}
+    \]
+    con \(H(u) \coloneqq \abs{x}^4 + \abs{p}^4\), definida para \(u = (x,p)\in
+    \mathbb{R}^{n+n}\) (sistemas de esta forma se llaman \textit{sistemas
+    Hamiltonianos}). Denote con \(\phi(t,x,p)\) su función flujo. Demuestre que
+    \(\phi \in \mathcal{C}^{\infty}\left(\mathbb{R}\times \mathbb{R}^{n+n},
+    \mathbb{R}^{n+n}\right)\) está definida para todos \(t\in \mathbb{R}\) y que
+    \[
+        \vol\left(\phi(t,B)\right) = \vol(B)
+    \]
+    para todos \(t\in \mathbb{R}\) y todas bolas \(B\subset \mathbb{R}^{n+n}\)
+\end{plist}
+\end{problema}
+\begin{plist}
+%R1a
+\item En primer lugar, notemos que tenemos las hipótesis para que valgan las
+ecuaciones variacionales, es decir:
+\[\label{r1a:ev}
+    \partial_t \partial_x \phi(t,x)
+    =
+    \partial_x f(\phi(t,x)) \cdot \partial_x \phi(t,x)
+    \tag{EV}
+.\]
+Sea \(J\) como en el enunciado. Por la fórmula de Jacobi sabemos que:
+\[
+    \dot{J}
+    =
+    J \cdot \tr \left(
+        (\partial_x \phi)^{-1}
+        \cdot
+        \partial_t \partial_x \phi
+    \right)
+    \tag{\(\star\)}
+\]
+para una vecindad \(I\times B\in \mathbb{R}^{1+n}\) donde el teorema de la
+función inversa nos
+garantice la existencia de \((\partial_x \phi)^{-1}\) (que por el mismo teorema
+es continuamente diferenciable). Por otro lado, las ecuaciones
+variacionales~\eqref{r1a:ev} nos dicen que:
+\[
+    (\star)
+    =
+    J \cdot \tr \left(
+        (\partial_x \phi)^{-1}
+        \partial_x f(\phi)
+        \partial_x \phi
+    \right)
+\]
+y recordando que \(\tr(AB) = \tr(BA) \in \mathbb{R}\) obtenemos la EDO pedida:
+\[
+    (\star)
+    =
+    J \cdot \tr \left(
+        \partial_x f(\phi)
+        \partial_x \phi
+        (\partial_x \phi)^{-1}
+    \right)
+    =
+    \tr \left(\partial_x f(\phi) \right)
+    J
+    =
+    \left(\sum_{i=1}^{n} \partial_{x_i} f_i(\phi(t,x_0))\right)
+    J
+    =
+    \Div f(\phi(t,x_0)) J
+.\]
+Veamos ahora la condición inicial. Notemos que \(\phi(0,x_0) = x_0\), luego
+\[
+    \partial_x x_0
+    =
+    \begin{pmatrix}
+        \partial_{x_1} x_0 & \dots & \partial_{x_n} x_0
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    1 & 0 & \dots & 0\\
+    0 & 1 & \dots & 0\\
+    \vdots & \vdots & \ddots & \vdots\\
+    0 & 0 & \dots & 1
+    \end{pmatrix}
+    =
+    I_{n\times n}
+\]
+así que el determinante da \(1\).
+
+%R1.b
+\item
+\end{plist}
+
+%P2
+\begin{problema}
+Sea \(A\in \mathcal{C}\left(\mathbb{R}, \mathbb{R}^{n\times n}\right)\) y
+considere el PVI
+\[
+    \dot{x} = A(t)x\quad,\quad x(0) = x_0
+.\]
+Suponga que para todo \(t\ge 0\), \(A(t) = \lambda(t)\mathbb{I} + B(t)\), donde
+\(\lambda \in \mathcal{C}(\mathbb{R})\) y \(B(t)\) es anti-simétrica.
+\begin{plist}
+    \item Denote con \(\Pi(t,0)\) el propagador asociado (aka ``la matriz
+    principal''). Demuestre que
+    \[
+        \norm{\Pi(t,0)} = \exp\left(\int_{0}^{t} \lambda(s) ds \right)
+    .\]
+
+    \item Dada la matriz de coeficientes
+    \[
+        A(t) =
+        \begin{pmatrix}
+        a(t) & b(t)\\
+        -b(t) & a(t)
+        \end{pmatrix}
+        \in \mathcal{C}\left(\mathbb{R}; \mathbb{R}^{2\times 2}\right)
+    ,\]
+    dé condiciones suficientes sobre \(a(t)\) y \(b(t)\) para que
+    \begin{itemize}
+        \item \(\lim_{t \to \infty} x(t) = 0\);
+        \item \(\abs{x(t)} = \abs{x_0}\) para todo \(t\ge 0\).
+    \end{itemize}
+\end{plist}
+\end{problema}
+\begin{plist}
+% R2.a
+\item
+En primer lugar notemos que \(A(t)\) conmuta con \(\int_{0}^{t} A(s)ds \), en
+efecto:
+\begin{align*}
+    A(t) \int_{0}^{t} A(s) ds
+    &=
+    \left(\lambda(t)\mathbb{I} + B(t)\right)
+    \left(\int_{0}^{t} \lambda(s)\mathbb{I} + B(s) ds \right)
+    \\&=
+    \lambda(t)\mathbb{I} \int_{0}^{t} \lambda(s)\mathbb{I} ds
+    +
+    \lambda(t)\mathbb{I} \int_{0}^{t} B(s) ds
+    +
+    B(t) \int_{0}^{t} \lambda(s) \mathbb{I} ds
+    +
+    B(t) \int_{0}^{t} B(s) ds
+\end{align*}
+LLamemos \(S_i\) al sumando respectivo, entonces
+\begin{itemize}
+    \item \(S_1\) es producto de matrices diagonales, así que conmuta;
+    \item \(S_2\) y \(S_3\) es un producto de una matriz diagonal con diagonal
+    constante (aka ``matriz escalar'') y otra matriz, así que conmutan;
+    \item \(S_4\)
+\end{itemize}
+
+Ya con esto, sabemos que una matriz fundamental del PVI está dada por:
+\[
+    X(t)
+    =
+    \exp\left(\int_{0}^{t} A(s) ds \right)
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) \mathbb{I} + B(s) ds \right)
+\]
+así que el propagador está dado por:
+\[
+    \Pi(t,0)
+    =
+    X(t) X^{-1}(0)
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) \mathbb{I} + B(s) ds \right)
+    \exp\left(-\int_{0}^{0} A(s) ds\right)
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) \mathbb{I} + B(s) ds \right)
+    \mathbb{I}
+.\]
+
+Como ya vimos, \(\int_{0}^{t} \lambda(s) \mathbb{I} ds \) conmuta con cualquier
+matriz (es una matriz escalar), así que en particular conmuta con \(B\).
+Luego:
+\[
+    \Pi(t,0)
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) \mathbb{I} ds \right)
+    \exp\left(\int_{0}^{t} B(s) ds \right)
+.\]
+Queremos sacar la norma, notemos que:
+\[
+    \exp\left(\int_{0}^{t} \lambda(s) \mathbb{I} ds \right)
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) ds \right)
+    \mathbb{I}
+    \implies
+    \norm{\exp\left(\int_{0}^{t} \lambda(s) ds \right) \mathbb{I}}
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) ds \right)
+\]
+y que:
+\[
+    \exp\left(\int_{0}^{t} B(s) ds \right)
+    =
+    \begin{pmatrix}
+    \cos \int_{0}^{t} b(s)ds & \sin \int_{0}^{t} b(s) ds\\
+    -\sin \int_{0}^{t} b(s) ds & \cos \int_{0}^{t} b(s) ds
+    \end{pmatrix}
+    \implies
+    \norm{\exp\left(\int_{0}^{t} B(s) ds \right)}
+    =
+    1
+\]
+así concluimos la igualdad pedida:
+\[
+    \norm{\Pi(t,0)}
+    =
+    \exp\left(\int_{0}^{t} \lambda(s) ds \right)
+.\]
+%R2.b
+\item Para el primer caso necesitamos que -todos- los valores propios tenga parte
+real negativa, mientras que para el segundo es necesario que la parte real sea
+nula.
+
+Veamos las condiciones en más detalle:
+\[
+    \det \lambda I - A
+    =
+    \det
+    \begin{pmatrix}
+    \lambda - a(t) & -b(t)\\
+    b(t) & \lambda - a(t)
+    \end{pmatrix}
+    =
+    \lambda^2 -2a(t) \lambda + a(t)^2 + b(t)^2
+    =
+    0
+\]
+aplicando la fórmula cuadrática obtenemos que:
+\[
+    \lambda
+    =
+    \frac
+        {2a(t) \pm \sqrt{4a(t)^2 - 4(a(t)^2 + b(t)^2)}}
+        {2}
+    =
+    a(t) \pm 2i\abs{b(t)}
+.\]
+Como dijimos antes, para el primer caso necesitamos que la parte real sea negativa,
+así que
+\(a(t) < 0\) es condición suficiente; Vale notar que si \(b(t) = 0\) en las soluciones
+aparacerá un \(te^{\lambda t}\) que también se va a \(0\) cuando \(t\to
+\infty\), así que tampoco hay problemas ahí.
+
+Por otro lado, si queremos que las soluciones estén a la misma distancia del
+origen, basta con que el valor propio sea complejo puro, es decir, \(a(t) = 0\)
+para todo \(t\ge 0\). También sirve \(a(t) = b(t) = 0\).
+\end{plist}
+% P3
+\begin{problema}
+Encuentre la solución general de
+\begin{plist}
+   \item \(\dot{x} = Ax\), donde
+   \(
+   A = \begin{pmatrix}
+   5 & 2 & 4\\
+   0 & 1 & 0\\
+   -8 & -1 & -7
+   \end{pmatrix}
+   \);
+   \item \(\ddot{x} + 4x = 2\sin(2t)\);
+   \item \(\ddot{x} - 2\dot{x} = -x + t-1 + 2e^t\);
+   \item \(t\ddot{x} - 2(t+1)\dot{x} + (t+2)x = 0, \phi_1(t) = e^t\).
+\end{plist}
+\end{problema}
+%R3
+\begin{plist}
+%R3.a
+\item Busquemos los valores propios de la matriz \(A\):
+\begin{align*}
+    \det(A - \lambda I)
+    &=
+    \det
+    \begin{bmatrix}
+    5 - \lambda & 2 & 4\\
+    0 & 1 - \lambda & 0\\
+    -8 & -1 & -7 -\lambda
+    \end{bmatrix}
+    \\&=
+    (5-\lambda) \abs{
+    \begin{matrix}
+        1-\lambda & 0\\
+        -1 & -7-\lambda
+    \end{matrix}
+    }
+    - 2 \abs{
+    \begin{matrix}
+        0 & 0\\
+        -8 & -7-\lambda
+    \end{matrix}
+    }
+    + 4 \abs{
+    \begin{matrix}
+        0 & 1-\lambda\\
+        -8 & -1
+    \end{matrix}
+    }
+    \\&=
+    (5-\lambda)(1-\lambda)(-7-\lambda) + 32(1-\lambda)
+\end{align*}
+Igualando a \(0\) vemos que \(\lambda = 1\) sirve. Dividiendo por el término
+\((1-\lambda)\) tenemos que
+\[
+    (5-\lambda)(-7-\lambda) + 32 = 0
+    \implies
+    \lambda = 1, \lambda = -3
+.\]
+En resumen, los valores propios con \(1,1\) y \(-3\).
+
+Veamos la multiplicidad geométrica (m.g) de cada valor propio. Ciertamente
+\(\lambda = -3\) tiene m.g \(1\); Por otro lado, para \(\lambda = 1\) vemos que
+\(\dim \ker (A-I) = 1\), así que la m.g es \(1\). Se sigue que la matriz \(A\)
+no es diagonalizable, sin embargo, podemos calcular su forma de jordan.
+
+Para calcular la forma de jordan necesitamos los vectores propios generalizados,
+para los valores propios distintos tenemos:
+\begin{align*}
+    (A-I)v_1 = 0 &\rightarrow v_1 = (1, 0, -1)\\
+    (A+3x)v_3 = 0 &\rightarrow v_3 = (1, 0, -2)
+\end{align*}
+para obtener \(v_2\) necesitamos una solución de sistema \((A-I)v_2 = v_1\) y
+una inspección arroja que \(v_2 = (-1/4, 1, 0)\) sirve. Luego, si \(V =
+\begin{pmatrix} v_1 & v_2 & v_3 \end{pmatrix}\) es la matriz con columnas los
+vectores propios tenemos que:
+\[
+    A = V
+    \underbrace{
+    \begin{pmatrix}
+        1 & 1 & 0 \\
+        0 & 1 & 0 \\
+        0 & 0 & -3
+    \end{pmatrix}
+    }_{A_J}
+    V^{-1}
+.\]
+
+Volviendo al sistema, sabemos que las soluciones son de la forma:
+\[
+    x(t)
+    =
+    \exp\left(t A\right) K
+    =
+    V \exp\left(tA_J\right) V^{-1} K
+\]
+donde \(K\) es una constante que depende las condiciones iniciales y la
+exponencial de la matriz de jordan es:
+\[
+\exp\left(tA_j\right)
+=
+\begin{pmatrix}
+e^t & te^t & 0\\
+0 & e^t & 0\\
+0 & 0 & e^{-3t}
+\end{pmatrix}
+\]
+
+%R3.b
+\item Primero debemos resolver el sistema homogeneo asociado:
+\[
+    \ddot{x} + 4x = 0
+\]
+que es equivalente al sistema de primer orden \(\dot{y} = Ay\) con
+\[
+    y = \begin{pmatrix} x \\ \dot{x} \end{pmatrix}
+    \hspace{.5cm}\text{y}\hspace{.5cm}
+    A =
+    \begin{pmatrix}
+    0 & 1\\
+    -4 & 0
+    \end{pmatrix}
+.\]
+Ahora seguimos el procedimiento usual:
+\begin{itemize}
+    \item \textbf{Valores propios}:
+    \[
+        \det{\lambda I - A}
+        =
+        \lambda^2 + 4
+        \implies
+        \lambda = \pm 2i
+    \]
+    Como los valores propios son imaginarios, esperamos un sistema de tipo
+    ``centro''.
+
+    \item \textbf{Vectores propios}:
+    \begin{align*}
+        Av = 2i v &\implies v = (1, 2i)\\
+        Av =-2i v &\implies v = (1, -2i)\\
+    \end{align*}
+
+    \item \textbf{Solución general}: Por los pasos anteriores sabemos que:
+    \[
+        y(t) =
+        e^{2it} \begin{pmatrix} 1 \\ 2i \end{pmatrix}
+        +
+        e^{-2it} \begin{pmatrix} 1 \\ -2i \end{pmatrix}
+    \]
+    es una solución del sistema \(\dot{y} = Ay\). Además:
+    \begin{align*}
+        e^{2it} &= \cos(2t) + i\sin(2t)\\
+        e^{-2it} &= \cos(2t) - i\sin(2t)
+    \end{align*}
+    así que
+    \[
+        y(t) =
+        \begin{pmatrix}
+            2\cos(2t) \\
+            -4\sin(2t)
+        \end{pmatrix}
+    \]
+    y por lo tanto la solución es real y nos sirve. Luego, las soluciones
+    generales al sistema homogéneo están dadas por:
+    \[
+        y_h(t) = \alpha y(t)
+        \iff
+        x = 2 \alpha \cos(2t), \dot{x} = -4\alpha\sin(2t)
+        \quad \alpha \in \mathbb{R}
+    \]
+    que es lo mismo que poner \(x_h(t) = 2\alpha\cos(2t)\).
+\end{itemize}
+Ahora volvemos al sistema no homogéneo:
+\[
+    \ddot{x} + 4x = 2\sin(2t)
+\]
+que sabemos tiene soluciones de la forma:
+\[
+    x(t) = x_p(t) + x_h(t)
+\]
+donde \(x_h\) es la solución al sistema homogéneo que ya investigamos y \(x_p\)
+es una solución particular del caso no homogéneo, experimentar un rato nos
+arroja que \(x_p(t) = -t\cos(2t)/2\) funciona, así que las soluciones generales
+son de la forma
+\[
+    x(t) = \cos(2t) (-\beta\frac{t}{2} + 2\alpha)
+.\]
+%R3.c
+\item Primero resolvemos el sistema homogéneo, que es equivalente al sistema de
+primer orden \(\dot{y} = Ay\) donde
+\[
+    y = \begin{pmatrix} x \\ \dot{x} \end{pmatrix},
+    \quad
+    A =
+    \begin{pmatrix}
+    0 & 1\\
+    -1 & 2
+    \end{pmatrix}
+.\]
+Empezamos buscando los valores propios:
+\[
+    \det \lambda I - A
+    =
+    \lambda^2 - 2\lambda + 1
+    =
+    0
+    \implies
+    \lambda = 1
+.\]
+luego, \(\lambda = 1\) es el único valor propio. Veamos ahora su multiplicidad
+geométrica:
+\[
+    A(v_1, v_2) = (v_1, v_2)
+    \iff
+    v_1 = v_2
+\]
+así que la m.g. es de \(1\) pues \(\dim \ker I - A = 1\). Esperamos un
+sistema de tipo ``estrella inestable''.
+
+La matriz de jordan de \(A\) es:
+\[
+    M =
+    \begin{pmatrix}
+    1 & 1\\
+    0 & 1
+    \end{pmatrix}
+.\]
+Luego, las soluciones al sistema \(\dot{z} = M z\), donde \(z = V^{-1} y\) y
+\(V\) es la matriz de cambio de coordenadas asociada a la forma de jordan de la
+matriz \(A\), son de la forma:
+\[
+    z(t) =
+    \alpha e^{t} \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+    +
+    \beta e^{t} \begin{pmatrix} t \\ 1 \end{pmatrix}
+\]
+así que debemos encontrar \(V\) para obtener las soluciones de sistema en
+coordenadas \(y\).
+
+Tomemos \(v = (1,1)\), que es un vector propio de \(A\). Dejemos a \(w =
+(1,0)\) y como es linealmente independiente con \(v\) se tiene que:
+\[
+    Aw
+    =
+    (0,-1)
+    = \mu v + \lambda w
+    = \mu (1,1) + (1,0)
+    \implies
+    \mu = -1.
+\]
+Luego, la matriz \(V = \begin{pmatrix} v & -w \end{pmatrix}\) cumple con:
+\[
+    V^{-1} A V
+    =
+    \begin{pmatrix}
+    0 & 1\\
+    -1 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+    0 & 1\\
+    -1 & 2
+    \end{pmatrix}
+    \begin{pmatrix}
+    1 & -1\\
+    1 & 0
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    1 & 1\\
+    0 & 1
+    \end{pmatrix}
+    =
+    M
+\]
+y por lo tanto las soluciones del sistema \(\dot{y} = Ay\) están dadas por:
+\[
+    y_h(t)
+    =
+    Vz(t)
+    =
+    \alpha e^{t} \begin{pmatrix} 1 \\ 1 \end{pmatrix}
+    +
+    \beta e^{t} \begin{pmatrix} t-1 \\ t \end{pmatrix}
+\]
+que en términos de \(x\) nos da:
+\[
+\begin{cases}
+    x(t) &= \alpha e^{t} + \beta e^{t} (t-1)\\
+    \dot{x}(t) &= \alpha e^{t} + \beta e^{t} t
+\end{cases}
+\]
+y es suficiente expresar \(x_h(t) = \alpha e^{t} + \beta e^{t}(t-1)\)
+
+Así, las soluciones son de la forma:
+\[
+    x(t) = x_h(t) + x_p(t)
+\]
+y sólo debemos encontrar \(x_p(t)\). Matraquear un rato nos arroja que \(x_p(t)
+= t+1+t^2 e^t\) funciona. Así que las soluciones generales son de la forma:
+\[
+    x(t) = 1 + t + \alpha e^t + \beta t e^t + t^2 e^t
+.\]
+%R3.d
+\item Dado que tenemos una solución \(x_1(t) = e^t\), usaremos el método de
+reducción de order.
+
+Buscaremos otra solución del estilo \(x_2(t) = c(t) e^t\). Calculamos sus
+derivadas:
+\begin{align*}
+    \dot{x}_2(t) &= e^t (\dot{c}(t) + c(t))\\
+    \ddot{x}_2(t) &= e^t (\ddot{c}(t) + 2\dot{c}(t) + c(t))
+\end{align*}
+
+Metiendo estos datos en la ecuación obtenemos:
+\[
+    te^t (\ddot{c} + 2\dot{c} + c)
+    -
+    2(t+1) e^t (\dot{c} + c)
+    +
+    (t+2) e^t c
+    =
+    te^t \ddot{c} + \dot{c} (te^t - 2(t+1) e^t)
+    =
+    0
+.\]
+Donde usamos que \(e^t\) soluciona la ecuación. Haciendo el cambio de variables
+\(w = \dot{c}\) y diviendo por \(e^t\) la ecuación anterior se transforma en:
+\[
+    t\dot{w} -2 w = 0
+    \iff
+    t \dot{w} = 2w
+.\]
+Suponiendo que \(t > 0\) la podemos dividir por \(t\) y por lo tanto \(w(t) =
+w_0 t^2 = \dot{c}\), de esta forma \(c = w_0 t^3/3 + K\) entregandonos que
+\[
+    x_2(t) = \frac{t^3}{3} e^t
+.\]
+(tomando \(w_0=1\) y \(K = 0\)), y por lo tanto las soluciones de la ecuación
+son de la forma
+\[
+    x(t) = \alpha e^t + \beta \frac{t^3}{3} e^t
+.\]
+\end{plist}
+
+%P4
+\begin{problema}
+Sea \(A\) la matriz constante asociada a la EDO homogénea de orden \(n\):
+\[
+    x^{(n)} + q_{n-1}x^{(n-1)} + \dots + q_1 \dot{x} + q_0 x = 0
+\]
+(tal que el sistema equivalente de primer orden es \(\dot{y} = Ay\), donde \(y =
+(x, \dot{x}, \dots, x^{(n-1)})\)).
+\begin{plist}
+    \item Demuestre que el polinomio característico de \(A\) es
+    \[
+        \chi(z)
+        \coloneqq
+        \det(zI - A)
+        =
+        z^n + q_{n-1}z^{n-1} + \dots + q_1 z + q_0
+    .\]
+    \item Pruebe que la multiplicidad geométrica de cada valor propio de \(A\)
+    es 1, i.e. cada valor propio de \(A\) es asociado con sólo un bloque de
+    Jordan.
+    \item Demuestre que la ecuación, o equivalentemente, el sistema \(\dot{y} =
+    Ay\) es estable si y sólo si todos los valores propios tienen parte real no
+    positiva, y todos los valores propios imaginarios son simples.
+\end{plist}
+\end{problema}
+\begin{plist}
+%R4.a
+\item En primer lugar veamos cómo se ve la matriz \(A\):
+\[
+    A =
+    \begin{pmatrix}
+    0 & 1 & 0 & \dots & 0\\
+    0 & 0 & 1 & \dots & 0\\
+    \vdots & \vdots & \ddots & \ddots & \vdots\\
+    0 & 0 & 0 & \dots & 1\\
+    -q_0 & -q_1 & -q_2 & \dots & q_{n-1}
+    \end{pmatrix}
+    \implies
+    zI - A
+    =
+    \begin{pmatrix}
+    z & -1 & 0 & \dots & 0\\
+    0 & z & -1 & \dots & 0\\
+    \vdots & \vdots & \ddots & \ddots & \vdots\\
+    0 & 0 & 0 & \dots & -1\\
+    q_0 & q_1 & q_2 & \dots & z+q_{n-1}
+    \end{pmatrix}
+.\]
+Haremos la prueba por inducción.
+
+\begin{itemize}
+    \item Para \(n = 2\) tenemos que:
+    \[
+        \det zI - A
+        =
+        \begin{pmatrix}
+        z & -1\\
+        q_0 & z + q_1
+        \end{pmatrix}
+        =
+        z^2 + z q_1 + q_0
+    .\]
+
+    \item Supongamos que la igualdad vale para todo \(k\le n\) y veamos que se
+    cumple para \(n+1\).
+
+    La hipótesis nos dice que para la \(A\) de la forma ya discutida tenemos:
+    \[
+        \det zI - A
+        =
+        \begin{pmatrix}
+            z & -1 & 0 & \dots & 0\\
+            0 & z & -1 & \dots & 0\\
+            \vdots & \vdots & \ddots & \ddots & \vdots\\
+            0 & 0 & 0 & \dots & -1\\
+            q_0 & q_1 & q_2 & \dots & z+q_{n-1}
+        \end{pmatrix}
+        =
+        z^n + q_{n-1} z^{n-1} + \dots + q_1 z + q_0
+    .\]
+    Consideremos entonces \(A\) una matriz de la misma forma pero con una
+    dimensión más, es decir:
+    \[
+        zI - A =
+        \begin{pmatrix}
+            z & -1 & 0 & \dots & 0\\
+            0 & z & -1 & \dots & 0\\
+            \vdots & \vdots & \ddots & \ddots & \vdots\\
+            0 & 0 & 0 & \dots & -1\\
+            q_0 & q_1 & \dots & q_{n-1} & z+q_{n}
+        \end{pmatrix}
+    .\]
+    Usando la regla de Laplace tenemos que:
+    \begin{align*}
+        \det zI - A
+        &=
+        z\,\abs{
+        \begin{matrix}
+            z & -1 & \dots & 0\\
+            0 & \ddots & \ddots & \vdots\\
+            q_1 & q_2 & \dots & z + q_{n}
+        \end{matrix}}
+        +\abs{
+        \begin{matrix}
+            0 & -1 & 0 &\dots & 0\\
+            0 & z & -1 & \dots & \vdots\\
+            \vdots & \ddots & \ddots & \dots & -1\\
+            q_0 & q_2 & \dots & q_{n-1} & z + q_{n}
+        \end{matrix}}
+    \end{align*}
+    Usando la hipótesis inductiva tenemos que
+    \[
+        z\,\abs{
+        \begin{matrix}
+            z & -1 & \dots & 0\\
+            0 & \ddots & \ddots & \vdots\\
+            q_1 & q_2 & \dots & z + q_{n}
+        \end{matrix}}
+        =
+        z^{n+1} + z^n q_n + \dots + z q_{2} + z q_1
+    .\]
+    Para el otro sumando usamos la regla de Laplace para obtener que:
+    \[
+        \abs{
+        \begin{matrix}
+            0 & -1 & 0 &\dots & 0\\
+            0 & z & -1 & \dots & \vdots\\
+            \vdots & \ddots & \ddots & \dots & -1\\
+            q_0 & q_2 & \dots & q_{n-1} & z + q_{n}
+        \end{matrix}}
+        =
+        \abs{(-1)^n q_0}
+        = q_0
+    .\]
+    Se concluye entonces que:
+    \[
+        \det zI - A
+        =
+        z^{n+1} + z^n q_n + \dots + z q_{2} + z q_1 + q_0
+    .\]
+\end{itemize}
+%R4.b
+    \item Supongamos que \(\alpha\) es un valor propio de \(A\) y veamos la
+    dimensión de \(\ker \alpha I - A\):
+    \begin{align*}
+        v \in \ker \alpha I - A
+        &\iff
+        Av = \alpha v
+        \\&\iff
+        \begin{pmatrix}
+        0 & 1 & 0 & \dots & 0\\
+        0 & 0 & 1 & \dots & 0\\
+        \vdots & \vdots & \ddots & \ddots & \vdots\\
+        0 & 0 & 0 & \dots & 1\\
+        -q_0 & -q_1 & -q_2 & \dots & q_{n-1}
+        \end{pmatrix}
+        \begin{pmatrix} v_1 \\ v_2 \\ \vdots \\ v_{n-1}\\ v_n \end{pmatrix}
+        =
+        \alpha \,
+        \begin{pmatrix} v_1 \\ v_2 \\ \vdots \\ v_{n-1}\\ v_n \end{pmatrix}
+        \\&\implies
+        v_k = \alpha^{k-1} v_1
+        \quad k\in \left\{2, \dots, n\right\}
+    .\end{align*}
+    Luego, como \(v_1\) determina todo lo demás, la dimensión del subespacio
+    propio es \(1\).
+
+    \textit{(no es relevante, pero del mismo computo se concluye que \(\det \alpha I - A =
+    0\)).}
+%R4.c
+    \item Sea \(\lambda_1, \dots, \lambda_k\) los valores propios de \(A\)
+    y \(d_1, \dots, d_k\) sus respectivas multiplicidades algebraicas.
+    Sean \(A_j, V\) la matriz de Jordan y la matriz de cambio de coordenadas
+    asociadas a \(A\).
+
+    Sabemos que las soluciones al sistema \(\dot{z} = VA_jV^{-1} z\) están dadas por:
+    \[
+        z(t) = V\exp\left(A_j\right) V^{-1}
+    \]
+    y por lo tanto, para \(1\le k \le n\) se tiene que:
+    \[
+        z_k(t)
+        =
+        c_{k,1} e^{\lambda_k t} +
+        c_{k,2} t e^{\lambda_k t} +
+        c_{k,3} \frac{t^2}{2} e^{\lambda_k t}
+        +\dots+
+        c_{k,d_k} \frac{t^{d_k - 1}}{(d_k - 1)!} e^{\lambda_k t}
+    .\]
+    En este punto no es necesario hacer un cambio de coordendas para volver al sistema
+    original puesto que no cambiaría el comportamiento asintótico. Dicho esto,
+    seguiremos el análisis de estabilidad en el sistema \(z\).
+
+    \framebox{\(\impliedby\)}: Si \(\Re{\lambda_k} \le 0\)
+    para todo \(k\) entonces hay dos casos, para \(\Re{\lambda_k}\) no nulo,
+    \(e^{\lambda_k t}\) tiende a \(0\) cuando \(t\to
+    \infty\) y para \(\Re{\lambda_k = 0}\) el comportamiento es de ``centro'',
+    es decir, las soluciones giran alrededor del origen de manera periódica.
+
+    \framebox{\(\implies\)}: Supongamos que el sistema es estable, es decir,
+    ninguna solución explota cuando \(t\to \infty\). Sabemos que las soluciones
+    son de la forma:
+    \[
+        z_k(t)
+        =
+        c_{k,1} e^{\lambda_k t} +
+        c_{k,2} t e^{\lambda_k t} +
+        c_{k,3} \frac{t^2}{2} e^{\lambda_k t}
+        +\dots+
+        c_{k,d_k} \frac{t^{d_k - 1}}{(d_k - 1)!} e^{\lambda_k t}
+    \]
+
+\end{plist}
+
+%P5
+\begin{problema}
+Considere el sistema lineal homogéneo \(\dot{x} = A_b x\), donde
+\(
+A =
+\begin{pmatrix}
+    b & 3\\
+    -3 & 2
+\end{pmatrix}
+.\)
+\begin{plist}
+    \item Encuentre la solución general del sistema cuando \(b=-4\) y
+    \textit{dibuje} el retrato de fase.
+    \item Determine los valores de \(b\) para los cuales el origen es,
+    respectivamente, una fuente, una fuente espiral, un sumidero, un sumidero
+    espiral, una silla y un centro.
+\end{plist}
+\end{problema}
+\begin{plist}
+%R5.a
+\item Seguiremos el procedimiento de siempre, es decir, buscaremos los valores
+propios, seguido de los vectores propios y finalmente usaremos esa información
+para armar la solución general.
+
+Vamos con los valores propios:
+\[
+    \det \lambda I - A_{-4}
+    =
+    \det
+    \begin{pmatrix}
+    \lambda + 4 & -3\\
+    3 & \lambda -2
+    \end{pmatrix}
+    =
+    \lambda^2 + 2\lambda + 1
+    =
+    (\lambda + 1)^2
+\]
+así que el único valor propio es \(\lambda = -1\). Para seguir analizando
+necesitamos determinar su multiplicidad geométrica.
+
+\begin{align*}
+    A_{-4} v = -v
+    &\iff
+    \begin{pmatrix}
+    -4 & 3\\
+    -3 & 2
+    \end{pmatrix}
+    \begin{pmatrix} v_1 \\ v_2 \end{pmatrix}
+    =
+    -\begin{pmatrix} v_1 \\ v_2 \end{pmatrix}
+    \\&\iff
+    \begin{cases}
+        -4 v_1 + 3 v_2 &= -v_1\\
+        -3 v_1 + 2 v_2 &= -v_2
+    \end{cases}
+    \\&\iff
+    v_1 = v_2
+\end{align*}
+Concluimos entonces que la multiplicidad geométrica es \(1\) (pues \(\dim \ker
+(A_{-4} + I) = 1\)). Luego, la matriz \(A_{-4}\) diagonalizada se como:
+\[
+    M =
+    \begin{pmatrix}
+    -1 & 1\\
+    0 & -1
+    \end{pmatrix}
+\]
+Así que las soluciones al sistema \(\dot{y} = M y\), donde \(y = V^{-1} x\) y
+\(V\) es la matriz cambio de coordenadas, son de la forma:
+\[
+    y(t)
+    =
+    \alpha e^{-t} \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+    +
+    \beta e^{-t} \begin{pmatrix} t \\ 1 \end{pmatrix}
+\]
+Ahora necesitamos sacar \(V\), dado que la multiplicidad geométrica es \(1\),
+todos los vectores propios están sobre la misma recta así que debemos trabajar
+un poco más para obtener \(V\). La primera columna es fácil de obtener, pues
+\((1,1)\) sirve (\(A_{-4}(v_1, v_2) = (-v_1, -v_2) \iff v_1 = v_2\)).
+Consideremos el vector \(w = (1, 0)\) que es linealmente independiente de \(v\),
+luego:
+\[
+    A_{-4} w = \mu_1 v + \mu_2 w
+    \implies
+    \mu_1 = -3
+    \quad\land\quad
+    \mu_2 = -1 = \lambda
+.\]
+así que definiendo \(v_2 = -w/3\) tenemos que \(V = (v_1 v_2)\) cumple con:
+\[
+    V^{-1} A_{-4} V
+    =
+    \begin{pmatrix}
+    0 & 1\\
+    -3 & 3
+    \end{pmatrix}
+    \begin{pmatrix}
+    -4 & 3\\
+    -3 & 2
+    \end{pmatrix}
+    \begin{pmatrix}
+    1 & -1/3\\
+    1 & 0
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    -1 & 1\\
+    0 & -1
+    \end{pmatrix}
+    = M
+\]
+y por lo tanto, las soluciones en las coordenadas originales se ven como
+\[
+    x(t)
+    =
+    Vy(t)
+    =
+    \alpha e^{-t} \begin{pmatrix} 1\\ 1 \end{pmatrix}
+    +
+    \beta e^{-t} \begin{pmatrix} t-1/3 \\ t \end{pmatrix}
+.\]
+Podemos observar que el sistema es estable, pues para \(t\to \infty\) se tiene
+que \(x(t) \to 0\).
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=3]
+    \draw[<->] (-1.1,0) -- (1.1,0);
+    \draw[<->] (0,-1.1) -- (0,1.1);
+
+    \draw[blue] (-1,-1) -- (0,0);
+    \draw[blue] (0, 0) -- (1,1);
+
+    \foreach \x in {-.8, -.7, ..., .8}
+    {
+        \draw[domain=0:{1.2+\x/20}, smooth, variable=\t, blue, ->]
+            plot({\x*e^(-\t) + \x*e^(-\t)*(\t-1/3)}, {2*\x*e^(-\t)});
+    }
+\end{tikzpicture}
+\caption{Retrato de fase del sistema \(\dot{x} = A_{-4}x\)}
+\end{figure}
+
+%R5.b
+\item Veamos los valores propios:
+\[
+    \det \lambda I - A
+    =
+    \lambda^2 - (2+b)\lambda + 2b + 9
+    \implies
+    \lambda =
+    \frac{(2+b) \pm \sqrt{(2+b)^2 - 4(2b+9)}}{2}
+.\]
+Luego, para:
+\begin{itemize}
+    \item \textbf{sumidero:} necesitamos que los valores propios sean reales y
+    negativos, es decir:
+    \[
+        \triangle = (2+b)^2 - 4(2b+9) > 0
+        \quad\land\quad
+        \frac{(2+b) \pm \sqrt{\triangle}}{2} < 0
+    .\]
+    Notar que \((2+b) < 0\) pues ambos valores propios deben ser negativos, así que
+    la segunda desigualdad nos queda como:
+    \[
+        \abs{2+b} > \abs{\sqrt{\triangle}}
+        \implies
+        b > -9/2
+    .\]
+    y de la primera tenemos que \(b < -4\) y que \(b > 8\), así se
+    concluye que \(b \in (-4.5, -4)\).
+
+    \item \textbf{sumidero espiral:} necesitamos que los valores propios tengan
+    parte imaginaria no nula y que su parte real sea negativa.
+    \[
+        \triangle = (2+b)^2 - 4(2b+9) < 0
+        \quad\land\quad
+        \frac{2+b}{2} < 0
+    .\]
+    De la primera desigualdad \(b < 8\) y \(b > -4\). De la segunda obtenemos
+    que \(b < -2\) así que para \(b \in (-4, -2)\) tenemos un sumidero espiral.
+
+    \item \textbf{fuente:} aquí necesitamos que los valores propios sean reales
+    y positivos.
+    \[
+        \triangle = (2+b)^2 - 4(2b+9) = 0
+        \quad\land\quad
+        \frac{2+b}{2} > 0
+    .\]
+    De la primera \(b = 8\) o \(b = -4\). De la segunda \(b > -2\). Concluimos
+    que \(b = 8\).
+
+    \item \textbf{fuente espiral:} aquí los valores propios deben ser complejos
+    con parte real positiva.
+    \[
+        \triangle = (2+b)^2 - 4(2b+9) < 0
+        \quad\land\quad
+        \frac{2+b}{2} > 0
+    .\]
+    la primera desigualdad nos dice que \(b < 8\) y \(b > -4\). La segunda, como
+    antes, \(b > -2\). Concluimos que \(b\in (-2, 8)\)
+
+    \item \textbf{silla:} aquí necesitamos que los valores propios sean reales y con
+    signo opuesto.
+    \[
+        \triangle = (2+b)^2 - 4(2b+9) > 0
+        \quad\land\quad
+        \frac{2+b}{2} < \abs{\frac{\sqrt{\triangle}}{2}}
+    .\]
+    Luego, \(b < -9/2 = -4.5\) sirve.
+
+    \item \textbf{centro:} aquí necesitamos complejos puros, así que \(b = -2\).
+\end{itemize}
+\end{plist}
+
+%P6
+\begin{problema}
+Considere el sistema \(\dot{x} = Ax\) donde
+\[
+    A =
+    \begin{pmatrix}
+    1 & 1 & 1\\
+    0 & 0 & 0\\
+    0 & -1 & 2
+    \end{pmatrix}
+.\]
+Encuentre todos los datos iniciales \(x_0 = x(0)\) tales que la solución
+correspondiente \(x(t)\)
+\begin{plist}
+    \item es acotada para \(t\ge 0\);
+    \item crece linealmente;
+    \item crece más rapidamente que linealmente, i.e. \(\lim_{t \to \infty}
+    \frac{\abs{x(t)}}{t} = \infty\).
+\end{plist}
+\end{problema}
+
+%P7
+\begin{problema}
+Considere el sistema lineal homogéneo \(\dot{x} = A(t)x\), para \(t > 0\), donde
+\[
+    A(t)
+    =
+    \begin{pmatrix}
+    3/t & -1\\
+    2/t^2 & -1/t
+    \end{pmatrix}
+.\]
+\begin{plist}
+    \item Verifique que \(x_1(t) = (t^2, t)\) resuelve el sistema para \(t > 0\).
+    \item Sea \(x_2(t)\) otra solución, tal que el Wronskiano \(W(t) \coloneqq
+    \det(x_1, x_2)\) satisface \(W(1) = 1\). Encuentre \(W(t)\).
+    \item Use el conocimiento de \(W(t)\) para determinar una posible solución
+    \(x_2\).
+    \item Resuelva el PVI
+    \[
+        \dot{x} = A(t)x + \begin{pmatrix}0\\-2t\end{pmatrix},
+        \quad t > 0 \quad\text{con}\quad
+        x(1) = \begin{pmatrix}1\\1\end{pmatrix}
+    .\]
+\end{plist}
+\end{problema}
+\begin{plist}
+%R7.a
+\item Basta evaluar,
+\[
+    A(t) x_1(t) = (2t, 1) = (t^2, t) = \dot{x}_1(t)
+.\]
+%R7.b
+\item Sea \(x_2 = (u,v)\). Necesitamos resolver el PVI
+\[
+    \dot{W} =
+    \tr \begin{pmatrix}
+    3/t & -1\\
+    2/t^2 & -1/t
+    \end{pmatrix}
+    \det
+    \begin{pmatrix}
+    t^2 & u\\
+    t & v
+    \end{pmatrix}
+    =
+    (2/t) (t^2 v - t u)
+    =
+    2tv - 2u
+    \quad;\quad
+    W(1) = 1 = v(1) - u(1)
+.\]
+Sabemos que las soluciones vienen dadas por:
+\[
+    W(t)
+    =
+    W(1) \exp\left(\int_{1}^{t} \tr A(s) ds \right)
+    =
+    \exp \left(2 \log(t) \right)
+    =
+    t^2
+.\]
+%R7.c
+\item De la parte anterior y usando la misma notación tenemos que:
+\[
+    2t = \dot{W} = 2tv - 2u
+    \iff
+    u = t(v-1)
+    \quad\land\quad
+    1 = v(1) - u(1)
+.\]
+Si ponemos \(u=t\) entonces \(v = 2\) y se cumple la EDO
+\[
+    \begin{pmatrix} \dot{u}\\ \dot{v} \end{pmatrix}
+    =
+    \begin{pmatrix} 1 \\ 0 \end{pmatrix}
+    =
+    \begin{pmatrix}
+    3/t & -1\\
+    2/t^2 & -1/t
+    \end{pmatrix}
+    \begin{pmatrix} t\\ 2 \end{pmatrix}
+.\]
+
+%R7.d
+\item De la parte anterior sabemos que
+\[
+    X = \begin{pmatrix} t^2 & t\\ t & 2 \end{pmatrix}
+\]
+es solución de la EDO
+\[
+    \dot{X} = A(t) X
+.\]
+Para resolver la no homogénea, necesitamos una solución particular, y para
+encontrarlas buscaremos soluciones del estilo
+\[
+    x_p(t) = X c(t)
+    \implies
+    X\dot{c} = \underbrace{\begin{pmatrix} 0 \\ -2t \end{pmatrix}}_{G(t)}
+.\]
+Aplicando regla de Cramer tenemos que
+\[
+    \dot{c}_1 = \frac{\det X_1}{\det X}
+    \hspace{1cm}
+    \dot{c}_2 = \frac{\det X_2}{\det X}
+\]
+Donde \(X_i\) es la matriz \(X\) reemplazando la columna j-ésima por \(G(t)\).
+Haciendo el cálculo obtenemos que \(\dot{c}_1 = 2\) y \(\dot{c}_2 = -2t\) e
+integrando (eligiendo las constantes adecuadas) tenemos que \(c_1 = 2t\) y \(c_2
+= -t^2\). Luego, la solución particular es
+\[
+    x_p(t) = Xc = \begin{pmatrix} t^3 \\ 0 \end{pmatrix}
+.\]
+De esta forma, las soluciones generales están dadas por
+\[
+    x(t) =
+    \begin{pmatrix} t^3 \\ 0 \end{pmatrix}
+    +
+    \alpha \begin{pmatrix} t^2 \\ t \end{pmatrix}
+    +
+    \beta \begin{pmatrix} t \\ 2 \end{pmatrix}
+.\]
+como queremos \(x(1) = (1,1)\) las constantes adecuadas son \(\alpha = -1\) y
+\(\beta = 1\).
+\end{plist}
+
+%P8
+\begin{problema}
+Suponga que \(f = f(t,x) \in \mathcal{C}^1(\mathbb{R}\times \mathbb{R}^n,
+\mathbb{R}^n)\) satisface \(f(t,0) = 0\) y
+\[
+    \partial_x f(t,x) v \cdot v \le M(t) \abs{v}^2
+    \hspace{.5cm}
+    \text{para todos }
+    x,v \in \mathbb{R}^n,
+\]
+para alguna función continua \(M\in \mathcal{C}(\mathbb{R})\). Pruebe que toda
+solución \(\dot{x} = f(t,x)\) está definida globalmente.
+\end{problema}
+Notemos que por el TFC
+\[
+    f(t,x)
+    =
+    f(t,0)
+    +
+    \int_{0}^{1} \partial_s f(t,sx) ds
+    =
+    \int_{0}^{1} \partial_x f(t,sx) x ds
+.\]
+y la última igualdad se debe a la regla de la cadena y la hipótesis (\(f(t,0) =
+0\). Luego
+\[
+    f(t,x)\cdot x
+    =
+    \int_{0}^{1} \partial_x f(t,sx) x\cdot x ds
+    \le
+    \int_{0}^{1} M(t) \abs{x}^2 ds
+\]
+y
+\[
+    \frac{d}{dt} \abs{x(t)}^2
+    \leq
+    2x\dot{x}
+    =
+    2xf(t,x)
+    \leq
+    2\int_{0}^{1} M(t) \abs{x}^2 ds
+\]
+integrando obtenemos que
+\[
+    \abs{x(t)}^2
+    \le
+    2\abs{x(0)}^2
+    +
+    2\int_{0}^{t} M(s) \abs{x(s)}^2 ds
+\]
+y aplicando Grönwall se tiene que
+\[
+    \abs{x(t)}^2
+    \le
+    2\abs{x(0)}^2 \exp \left(\int_{0}^{t} 2M(s) ds \right)
+.\]
+Dado que la cota es continua para todo \(t\) concluimos que \(x(t)\) no explota
+en tiempo finito.
+\end{document}

@@ -1,0 +1,69 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{tikz,pgfplots}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usetikzlibrary{babel}
+
+\usepackage{mdframed}
+
+\usepackage{amstext} % for \text macro
+\usepackage{array}   % for \newcolumntype macro
+\newcolumntype{C}{>{$}c<{$}} % math-mode version of "c" column type
+\newcolumntype{L}{>{$}l<{$}} % math-mode version of "l" column type
+
+\newcounter{problemctr}[section]
+\newenvironment{problema}{
+    \refstepcounter{problemctr}
+    \mdfsetup{%
+        frametitle={\tikz\node[fill=white,rectangle,inner sep=1pt,outer
+        sep=1pt]{Problema \theproblemctr};},
+        frametitleaboveskip=-0.5\ht\strutbox,
+        frametitlealignment=\center
+    }%
+    \begin{mdframed}[style=exampledefault]
+    }{\end{mdframed}
+}
+
+\newlist{plist}{enumerate}{1}
+\setlist[plist]{label=(\alph*),leftmargin=2em,rightmargin=2em,itemindent=2pt,itemsep=0pt,topsep=0pt}
+
+\newlist{clist}{itemize}{1}
+\setlist[clist]{label=\(\bullet\), listparindent=1em, leftmargin=2pt,itemindent=2pt}
+
+\usepackage[T1]{fontenc}
+
+%\usepackage{subfiles}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\newcommand\sideToSide[3]%
+{
+    \begin{minipage}{#1\textwidth}
+       #2
+    \end{minipage}
+    \begin{minipage}{\dimexpr\textwidth-#1\textwidth}
+       #3
+    \end{minipage}
+}
+
+%\begin{document}
+%    \subfile{Ayudantias/A5}
+%    \subfile{Ayudantias/A10}
+%\end{document}
+

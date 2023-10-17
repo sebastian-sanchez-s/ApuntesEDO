@@ -1,0 +1,182 @@
+\documentclass[../pheader.tex]{subfiles}
+
+\begin{document}
+{\sc Ayudantía 3 - EDO\hfill \small \rm Apuntes: Sebastián Sánchez}
+
+\begin{center}
+    \begin{tabular}{rl}
+        Docente:& Nikola Kamburov\\
+        Ayudante:& Jorge Acuña
+    \end{tabular}
+\end{center}
+
+% P1
+\begin{problema}
+Sea \(t\in [a,b]\), \(p(t)\) una matriz \(n\times n\) con entradas continuas, y
+\(q\colon [a,b] \to \mathbb{R}^n\) continua. Demuestre que la siguiente EDO
+tiene una única solución para toda condición inicial \(y(t_0) = y_0 \in
+\mathbb{R}^n\).
+\[
+    y'(t) + p(t) y = q(t)
+.\]
+\end{problema}
+% R1
+\begin{proof}
+Supongamos que hay dos soluciones distintas, \(y(t)\) y \(z(t)\). Definamos
+\(x(t) = y(t) - z(t)\), entonces \(x(t)\) satisface el PVI
+\[
+    \dot{x} = - p(t) x\quad,\quad x(t_0) = 0
+.\]
+Integrando tenemos que
+\[
+    x(t) = -\int_{t_0}^{t} p(s) x(s) ds
+    \implies
+    \abs{x(t)} \le \int_{t_0}^{t} \abs{p(s) x(s)} ds
+.\]
+Dado que \(t\in [a,b]\) y \(p(s)\) tiene entradas continuas, en particular es
+acotada. Luego
+\[
+    \abs{x(t)} \le \int_{t_0}^{t} K\abs{x(s)}ds
+\]
+y por Grönwall tenemos que
+\[
+    \abs{x(t)} \le 0
+.\]
+Así que \(x \equiv 0\) y por lo tanto las soluciones son idénticas.
+\end{proof}
+
+% P2
+\begin{problema}
+Suponga que \(f\in \mathcal{C}^\infty \left(U, \mathbb{R}\right)\) satisface
+\[
+    \abs{f(t,x) - f(t,y)}
+    \le
+    L(t)\abs{x-y}
+.\]
+Muestre que la solución \(\phi(t,x_0)\) del problema
+\[
+    \dot{x} = f(t,x),\quad x(t_0) = x_0
+\]
+satisface
+\[
+    \abs{\phi(t,x_0) - \phi(t,y_0)}
+    \le
+    \abs{x_0 - y_0} \exp\left(\int_{t_0}^{t} \abs{L(s)} ds\right)
+.\]
+\end{problema}
+% R2
+\begin{proof}
+Sea \(x = \phi(t,x_0)\) y \(y = \phi(t,y_0)\) dos soluciones del PVI respectivo.
+Sabemos que
+\[
+    \dot{x} = f(t,x) \quad x(t_0) = x_0
+    \implies
+    x = x_0 + \int_{t_0}^{t} f(s,x(s)) ds
+\]
+ciertamente tenemos la misma expresión para \(y\). Se sigue que
+\[
+    x-y = x_0 - y_0 + \int_{t_0}^{t} f(s,x(s)) - f(s,y(s)) ds
+\]
+y tomando norma se obtiene
+\begin{align*}
+    \abs{x-y}
+    &\le
+    \abs{x_0 - y_0}
+    +
+    \abs{\int_{t_0}^{t} f(s,x(s)) - f(s,y(s)) ds}
+    \\&\le
+    \abs{x_0 - y_0}
+    +
+    \int_{t_0}^{t} \abs{L(s)} \abs{x(s) - y(s)} ds
+\end{align*}
+Finalmente, como \(\abs{x-y}\), \(\abs{L(s)} > 0\) son continuas se cumplen las
+hipótesis para usar Grönwall, así que:
+\[
+    \abs{x-y} \le \abs{x_0 - y_0} \exp\left(\int_{t_0}^{t} \abs{L(s)} ds \right)
+.\]
+\end{proof}
+
+% P3
+\begin{problema}
+Sea \(f\in \mathcal{C}(U, \mathbb{R})\), donde \(U\) es un subconjunto abierto de
+\(\mathbb{R}^{n+1}\). Sea \((t_0, x_0) \in U\), y \(T,\delta > 0\) tal que
+\(\left[t_0, t_0 + T\right] \times \overline{B_{\delta}(x_0)} \subset U\).
+Definimos
+\[
+    L(t) = \sup \left\{
+        \frac
+            {\abs{f(t,x) - f(t,y)}}
+            {\abs{x-y}}
+        \colon
+        x\ne y \in B_{\delta}(x_0)
+    \right\}
+.\]
+Muestre que si \(L(t)\) es localmente absolutamente integrable en \(t\) (es
+decir, \(\int_{I} \abs{L(t)}dt < \infty\) para todo intervalo compacto \(I\))
+entonces existe una única solución local \(\tilde{x}(t) \in \mathcal{C}(I)\) del
+problema de Cauchy (PVI)
+\[
+    \dot{x} = f(t,x), \quad x(t_0) = x_0
+\]
+donde \(I\) es algún intervalo alrededor de \(t_0\).
+\end{problema}
+% R3
+\begin{proof}
+Sean \(x, y\) dos soluciones del PVI. Se sigue que
+\[
+    \begin{cases}
+        x = x_0 + \int_{t_0}^{t} f(s,x(s)) ds\\
+        y = x_0 + \int_{t_0}^{t} f(s,y(s)) ds
+    \end{cases}
+    \implies
+    x-y = \int_{t_0}^{t} f(s,x(s)) - f(s,y(s)) ds
+.\]
+Definamos el operador \(K(\phi)(t) = x_0 + \int_{t_0}^{t} f(s,x(s)) ds\). Luego,
+la expresión anterior la podemos expresar como
+\[
+    \begin{cases}
+        K(x)(t) = x_0 + \int_{t_0}^{t} f(s,x(s)) ds\\
+        K(x)(t) = x_0 + \int_{t_0}^{t} f(s,y(s)) ds
+    \end{cases}
+    \implies
+    K(x) - K(y) = \int_{t_0}^{t} f(s,x(s)) - f(s,y(s)) ds
+\]
+que tomando norma nos deja con y multiplicando por \(1\) en l integrando nos
+deja:
+\[
+    \abs{K(x) - K(y)}
+    \le
+    \int_{t_0}^{t} L(s) \abs{x(s) - y(s)} ds
+.\]
+
+\end{proof}
+% P4
+\begin{problema}
+Considere
+\[
+    f(y) =
+    \begin{cases}
+        4(y-1)^{3/4} &, y \ge 1\\
+        0 &, y < 1
+    \end{cases}
+\]
+\begin{plist}
+\item Demuestre que el PVI
+\[
+    \frac{dy}{dt} = f(y), \quad y(0) = 2
+\]
+tiene única solución local y encuentre el intervalo máximo de su definición.
+¿Es la solución maximal única?
+
+\item Para cada \(\varepsilon > 0\) fijo, construya una familia infinita de
+soluciones del problema
+\[
+    \frac{dy}{dt} = f(y),\quad y(0) = 1
+\]
+definidas en todo \(\mathbb{R}\) y distintas en el intervalo
+\(\left(-\varepsilon, \varepsilon\right)\). ¿Por qué este resultado no
+contradice el teorema de Picard-Lindelöf?
+\end{plist}
+\end{problema}
+% R4
+\end{document}

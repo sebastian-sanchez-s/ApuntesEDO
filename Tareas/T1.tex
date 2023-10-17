@@ -1,0 +1,932 @@
+\input{../pheader}
+
+\usetikzlibrary{intersections}
+\begin{document}
+
+{\sc Tarea 1 - EDO\hfill Sebastián Sánchez}
+
+\begin{center}
+Colaboladores:
+Felipe González,
+Claudio Meléndez,
+José Cuevas,
+Sebastián Lepe,
+Pablo Navarro,
+Mathias Luengo,
+Camila Guajardo Vásquez.
+\end{center}
+
+% PROBLEMA 1
+\begin{problema}
+Resuelva las siguientes EDO's:
+\begin{multicols}{3}
+\begin{enumerate}[label=(\alph*)]
+\item \(\dot{x} = x(1-x)\).
+\item \(\dot{x} = x\sin(t)\).
+\item \(\dot{x} = \frac{3x-2t}{t}\).
+\item \(y' = y^2 - \frac{y}{x} - \frac{1}{x^2}\).
+\item \(y' = \frac{y}{x} - \tan \left(\frac{y}{x}\right)\).
+\end{enumerate}
+\end{multicols}
+\end{problema}
+\begin{proof}[Solución]\ \\
+\begin{plist}
+\item \(\dot{x} = x(1-x)\).
+
+La ecuación es lineal y autónoma de primer orden.
+Consideremos las diferentes condiciones iniciales \(x(0) = x_0\).
+\begin{clist}
+    \item Si \(x_0 = 0\) la derivada de la solución es cero y por lo tanto
+    concluimos que \(\varphi \equiv 0\) es la única solución.
+
+    \item Si \(x_0 = 1\), \(\dot{x}\) es nula y por lo tanto la solución
+    \(\varphi(t)\) es constante y vale \(1\).
+
+    \item Si \(0 < x_0 < 1\) se tiene que \(0 < \dot{x}(0) < 1\), por lo tanto la
+    solución \(\varphi(t)\) es creciente. Los valores de \(x\) donde \(\dot{x}\)
+    no se anula van desde van desde \(x_1 = 0\) hasta \(x_1 = 1\).
+    Despejando la ecuación e integrando obtenemos la inversa de la solución
+    \[
+        F(x;x_0)
+        =
+        \int_{x_0}^{x} \frac{du}{u\left(1-u\right)}
+        =
+        \int_{x_0}^{x} \frac{1 \pm u}{u\left(1-u\right)} du
+        =
+        \log \left(\frac{x}{1-x}\right)
+        -
+        \log \left(\frac{x_0}{1-x_0}\right)
+    .\]
+    Luego, el intervalo máximo de la solución está dado por
+    \[
+        T_{+} = \lim_{x\uparrow 1} F(x;x_0) = \infty
+        \hspace{1.5cm}
+        T_{-} = \lim_{x\downarrow 0} F(x;x_0) = -\infty
+    .\]
+    Además, podemos calcular la inversa explícitamente. Así, la solución
+    \(x(t)\) es
+    \[
+        x(t) = \frac{e^{t}x_0}{1 - x_0 + e^{t}x_0}.
+    \]
+
+    \item Si \(x_0 > 1\) entonces para \(x > 1\) la derivada \(\dot{x}(x) < 0\) y
+    por lo tanto esperamos una solución decreciente. Dado que en \(x = 1\) la
+    derivada se anula, deducimos que (de existir) una solución se debe ver como
+    una función decreciente con asíntota en \(x = 1\). De lo anterior también
+    deducimos que el intervalo máximo donde \(x(1-x)\) no se desvanece va desde
+    \(x_1 = 1\) y \(x_2 = \infty\).
+
+    Como antes, podemos computar la inversa de la solución, dandonos la
+    expresión
+    \[
+        F(x;x_0)
+        =
+        \int_{x_0}^{x} \frac{du}{u-u^2}
+        =
+        \log\left(\frac{x}{x-1}\right) - \log\left(\frac{x_0}{x_0-1}\right)
+    .\]
+    Dado que \(1/(u-u^2)\) es negativa en \(\left(x_1,x_2\right)\) la función
+    \(F(x;x_0)\) es monótona decreciente. Luego, para obtener el intervalo
+    máximo de la solución basta evaluar en los límites.
+    \[
+        T_{-} = \lim_{x\uparrow \infty} F(x;x_0) = -\log\left(\frac{x_0}{x_0-1}\right)
+        \hspace{1.5cm}
+        T_{+} = \lim_{x\downarrow 1} F(x;x_0) = +\infty
+    .\]
+    Despejando la ecuación explícita obtenemos la misma que antes.
+    \[
+        x = \frac{e^{t}x_0}{1 - x_0 + e^{t}x_0}.
+    \]
+
+    \item Si \(x_0 < 0\), la derivada es negativa por lo que esperamos una
+    solución decreciente. Los valores dónde \(\dot{x}\) no se anula va desde
+    \(x_1 = -\infty\) hasta \(x_2 = 0\). Dado que la derivada decrece a medida
+    que nos acercamos a \(x=0\), esperamos que la solución tenga una asíntota en
+    este valor (a medida que retrocedemos en el tiempo).
+
+    Como antes, la inversa de la solución nos da que
+    \[
+        F(x;x_0)
+        =
+        \int_{x_0}^{x} \frac{du}{u(1-u)}
+        =
+        \log\left(\frac{x}{x-1}\right) - \log\left(\frac{x_0}{x_0 - 1}\right)
+    .\]
+    Dado que tenemos argumentos negativos, vemos que \(F(x;x_0)\) es
+    decreciente y monótona. Luego, los intervalos máximos son
+    \[
+        T_{-} = \lim_{x\uparrow 0} F(x;x_0)
+        = -\infty
+        \hspace{1.5cm}
+        T_{+} = \lim_{x\downarrow -\infty} F(x;x_0)
+        = -\log\left(\frac{x_0}{x_0-1}\right)
+    .\]
+    La solución explota en tiempo finito en el futuro. La fórmula explícita es
+    idéntica a las anteriores.
+\end{clist}
+\item \(\dot{x} = x\sin(t)\).
+
+La ecuación es de primer orden y separable. Definamos \(x_0 = x(t_0)\).
+
+Veamos las diferentes condiciones iniciales. Dado que la función seno es
+periódica, esperamos soluciones periodicas.
+
+\begin{clist}
+    \item Si \(x_0 = 0\), entonces una solución es \(x\equiv 0\) y vale
+    para todo \(t\in \mathbb{R}\).
+
+    \item Si \(x_0 > 0\). El intervalo máximo dónde \(x\) no se anula va de
+    \(x_1=0\) hasta \(x_2 = \infty\). Despejando e integrando tenemos que
+    la inversa de la solución es
+    \[
+        F(x;x_0) = \int_{x_0}^{x} \frac{du}{u} = \log(x) - \log(x_0)
+        =
+        \cos(t_0) - \cos(t)
+    .\]
+    Donde \(x \in (0, \infty)\). Así, el intervalo máximo de la solución es
+    \[
+        T_{+} = \lim_{x\uparrow \infty} F(x;x_0) = \infty
+        \hspace{1.5cm}
+        T_{-} = \lim_{x\downarrow 0} F(x;x_0) = -\infty
+    .\]
+    Y la podemos calcular explícitamente, obteniendo
+    \[
+        x(t) = x_0 \exp\left(\cos(t_0) - \cos(t)\right)
+    .\]
+
+    \item Si \(x_0 < 0\) el procedimiento es similar y de hecho nos da la misma
+    expresión y los mismos tiempos.
+\end{clist}
+
+\item \(\dot{x} = \frac{3x-2t}{t} = 3\frac{x}{t}-2\).
+
+Es una ecuación de primer orden no homogénea. Notar que \(t \ne 0\).
+Tomemos \(y = \frac{x}{t}\), de esta forma nos queda el sistema separable
+\[
+    \dot{y}
+    =
+    \frac{\dot{x}}{t} - \frac{x}{t^2}
+    =
+    \frac{2}{t} \left(y - 1\right)
+.\]
+
+Ahora debemos analizar los distintos PVI. Llamemos \(y_0 \coloneqq y(t_0) =
+x(t_0)/t_0\).
+
+\begin{clist}
+    \item Si \(y_0 = 1\), una solución es la función constante \(y\equiv 1\).
+
+    \item Si \(y_0 > 1\), entonces la imagen de la solución va desde \(y_1 = 1\) a
+    \(y_2 = \infty\). Dado que \(t\ne 0\), debemos analizar los casos de \(t\)
+    positivo y negativo. Sin perjuicio de lo enterior, trataremos de posponerlo
+    hasta que sea necesario, pues por la forma
+    de la ecuación se puede decir que hay una simetría `refleja' con respecto al
+    tiempo.
+
+    Despejando la ecuación de la manera usual para obtener la inversa.
+    \[
+        F(y;y_0) = \int_{y_0}^{y} \frac{du}{u-1} = \log(y-1) - \log(y_0 - 1)
+    .\]
+    Así, el intervalo máximo de la solución está dado por
+    \[
+        T_{+} = \lim_{y\uparrow \infty} F(y;y_0) = \infty\\
+        \hspace{1cm}
+        T_{-} = \lim_{y\downarrow 1} F(y;y_0) = -\infty
+    .\]
+    Además, podemos computar explicitamente la solución donde se aprecia la
+    simetría con respecto a \(t\).
+    \begin{align*}
+        \log(y-1) - \log(y_0 - 1) &= \log(t^2) - \log(t_0^2)
+        \\\Rightarrow
+        y(t) &= (y_0 - 1) \frac{t^2}{t_0^2} + 1
+    \end{align*}
+\end{clist}
+
+\item \(y' = y^2 - \frac{y}{x} - \frac{1}{x^2}\).
+
+La ecuación es de Ricatti, por lo que necesitamos saber una solución particular
+\(y_p(x)\). Una inspección arroja que \(y_p = 1/x\) funciona. Luego, con el
+cambio de variable \(u = 1/(y-y_p)\) nos queda el sistema lineal equivalente
+\[
+    \dot{u} = -\frac{1}{x} u - 1 \tag{\(\star\)}
+.\]
+Usaremos el método del propagrador. Tenemos que
+\[
+    P(v;w)
+    =
+    \exp\left(\int_{w}^{v} -\frac{dz}{z} \right)
+    =
+    \exp\left(\log(w/v)\right)
+    =
+    \frac{w}{v}
+.\]
+Por lo tanto la solución es
+\[
+    u(x)
+    =
+    u_0 P(x;x_0) + \int_{x_0}^{x} -P(x;s) ds
+    =
+    u_0 \frac{x_0}{x} - \frac{1}{x} \int_{x_0}^{x} s ds
+    =
+    u_0 \frac{x_0}{x} - \frac{1}{2x} \left(x^2 - x_0^2\right)
+.\]
+Del sistema original ya vemos que \(x_0,x \ne 0\) así que el propagador no se
+anula. Por el cambio de variables es claro que \(u \ne 0\) y en particular
+\(u_0 \ne 0\). Así, \(x_0 \in (0, \pm \infty\) y \(u_0 \in (0, \pm \infty\).
+
+\item \(y' = \frac{y}{x} - \tan \left(\frac{y}{x}\right)\).
+
+Definiendo \(w = \frac{y}{x}\) nos queda la ecuación separable:
+\[
+    \dot{w}
+    =
+    \frac{\dot{y}}{x} + \frac{y}{x^2}
+    =
+    \frac{w-\tan(w)}{x} + \frac{w}{x}
+    =
+    -\frac{\tan(w)}{x}
+.\]
+Como tangente se anula en \(k\pi\) y se indefine en \(k\pi \pm \frac{\pi}{2}\) (con
+\(k\in \mathbb{Z}\)). Debemos analizar estos distintos casos.
+\begin{clist}
+    \item Si \(w_0 = w(x_0) = y(x_0)/x_0 = 0\), entonces la función constante
+    \(w \equiv 0\) es una solución.
+
+    \item Si \(w_0 \in \left(k\pi, k\pi + \frac{\pi}{2}\right)\). Entonces el intervalo máximo dónde tangente no se
+    anula va desde \(w_1 = k\pi\) hasta \(w_2 = k\pi + \frac{\pi}{2}\).
+
+    Despejando e integrando, la inversa de la solución nos da
+    \[
+        F(w;w_0)
+        =
+        \int_{w_0}^{w} \frac{du}{\tan(u)}
+        =
+        \log(\abs{\sin(w)}) -
+        \log(\abs{\sin(w_0)})
+    .\]
+    Notar que sin importar la paridad de \(k\), la tangente es positiva
+    y por lo tanto la integral es creciente. Luego, como el dominio de la solución
+    es la imagen de la inversa, basta evaluar en los extremos. De esta forma el
+    tiempo máximo y mínimo respectivamente son
+    \[
+        T_{+} = \lim_{w \uparrow k\pi + \frac{\pi}{2}} F(w;w_0) =
+        -\log(\abs{\sin(w_0)})
+        \hspace{1.5cm}
+        T_{-} = \lim_{w \downarrow k\pi} F(w;w_0) = -\infty
+    .\]
+    Finalmente, despejando la siguiente expresión (que salió de haber integrado)
+    \[
+        \log(\abs{\sin(w)}) - \log(\abs{\sin(w_0)})
+        =
+        \log(\abs{x_0}) - \log(\abs{x})
+    .\]
+    Podemos encontrar la ecuación explícita de la solución (en términos de \(w\))
+    \[
+        w = \arcsin\left(\frac{x_0}{x} \sin(w_0)\right)
+    .\]
+    Deshaciendo el cambio, la solución en términos de \(y\) es
+    \[
+        y = x\arcsin\left(\frac{x_0}{x} \sin(y_0/x_0) \right)
+    .\]
+
+    \item Si \(w\in \left(k\pi - \frac{\pi}{2}, k\pi\right)\) la tangente es
+    negativa y por lo tanto \(F(w;w_0)\) es decreciente. Luego, lo único que
+    cambia es el intervalo máximo de la solución, siendo este delimitado por
+    \[
+        T_{-} = \lim_{w\uparrow k\pi} F(w;w_0) = -\infty
+        \hspace{1.5cm}
+        T_{+} = \lim_{w\downarrow k\pi + \frac{\pi}{2}} F(w;w_0) =
+        \log(\abs{\sin(w_0)})
+    .\]
+\end{clist}
+\end{plist}
+\end{proof}
+
+% PROBLEMA 2
+\begin{problema}
+Investigue la unicidad de la ecuación diferencial
+\[
+    \dot{x}
+    =
+    \begin{cases}
+        -t\sqrt{\abs{x}} &, x \ge 0\\
+        t\sqrt{\abs{x}} &, x \le 0
+    \end{cases}
+.\]
+Muestre que el PVI \(x(0) = x_0\) tiene una única solución global para cada \(x_0
+\in \mathbb{R}\). Sin embargo, muestre que las soluciones globales de todas
+formas se intersectan.
+
+\textit{Hint: Note que si \(x(t)\) es una solución, también lo es \(x(-t)\) y
+\(-x(t)\). Así que solo hace falta considerar los casos \(x_0 \ge 0\) y \(t_0
+\ge 0\)}.
+\end{problema}
+\begin{proof}
+La ecuación es separable. Analicemos las condiciones iniciales.
+
+\begin{clist}
+    \item Si \(x_0 = 0\) entonces \(x(t) = -x(t) = x(-t) \equiv 0\) es una solución
+    global.
+
+    \item Si \(x_0 > 0\) el IM es \((x_1, x_2) = (0,\infty)\). Despejando e
+    integrando de la manera usual tenemos que la solución es
+    \[
+        x(t) = \left(\sqrt{x_0} + \frac{t_0^2 - t^2}{4}\right)^2
+        \hspace{1cm}
+        -2\sqrt{x_0} < t < \infty
+    .\]
+    Dado que las apariciones del tiempo son cuadráticas identificamos la
+    simetría \(t \to -t\), así que \(x(-t)\) también es solución. Además,
+    la solución es única puesto que \(F(x;x_0) =
+    \int_{x_0}^{x} \frac{du}{\sqrt{u}}\) es estrictamente creciente en \((x_1, x_2)\).
+
+    \item Si \(x_0 < 0\) el IM es \((x_1, x_2) = (-\infty, 0)\). Luego, la
+    solución es
+    \[
+        x(t) = -\left(\sqrt{-x_0} + \frac{t_0^2 - t^2}{4}\right)^2
+        \hspace{1cm}
+        -\infty < t < 2\sqrt{-x_0}
+    .\]
+    Dado que \(-x_0 > 0\) tenemos la misma solución que antes pero reflejada con
+    respecto al eje \(t\) (es decir, \(-x(t)\) también es solución).
+    Por otro lado, podemos observar la misma simetría con respecto a \(t\).
+    Finalmente, la solución es única dado que \(F(x;x_0) = \int_{x_0}^{x} \frac{du}
+    {\sqrt{-u}}\) es estrictamente creciente en \((x_1, x_2)\).
+\end{clist}
+
+Notadas las simetrías, seguiremos en análisis considerando \(x_0, t_0 \ge 0\).
+Como la solución una cuártica con múltiplicidad 2 y las raíces existen
+(podemos despejar \(t\) explícitamente) hay dos intersecciones con la solución
+\(x\equiv 0\), ahora, bajo las restricciones de \(t\) sólo una es parte
+de la solución particular para ese \(x_0\) y en nuestro análisis es la raíz
+positiva.
+
+Para ver que intersecta con otras soluciones no nulas, consideremos
+\(x_0\) fijo. Para un tiempo inicial \(t_a\), el área de interés es el trozo que va
+desde \(-2\sqrt{x_0}\) hasta la primera raíz positiva de la solución (llamemosla
+\(T_a\)) ya que aquí podrían intersectarse. Y en efecto, si \(a < b\) entonces
+\(T_a < T_b\), y por lo tanto la curva que sube desde el tiempo \(T_a\) debe
+intersectar a la curva que baja y que toca el \(0\) en el tiempo \(T_b\).
+\begin{center}
+\begin{tikzpicture}[scale=3]
+    \def\x{1};
+    \def\a{0};
+    \def\b{2};
+    \def\l{1.1};
+    \clip (0,1.7) rectangle (4,-.5);
+    \draw[->] (\l, 0) -- (3, 0) node[near end,below] {\(t\)};
+    \draw[domain=\l:3, smooth, variable=\t]
+        plot ({\t}, {(sqrt(\x) + ((\a)^2 - (\t)^2)/4)^2}) node[below right]
+        {\(x_a\)};
+    \draw[domain=\l:3, smooth, variable=\t, dashed]
+        plot ({\t}, {(sqrt(\x) + ((\b)^2 - (\t)^2)/4)^2})
+        node[above left] {\(x_b\)};
+\end{tikzpicture}
+\end{center}
+\end{proof}
+
+% PROBLEMA 3
+\begin{problema}
+Considere la ecuación
+\[
+    F(x,y) = 0, \qquad F \in C^2(\mathbb{R}^2, \mathbb{R}^2)
+.\]
+Suponga que \(y(x)\) soluciona esta ecuación. Muestre que \(y(x)\) satisface
+\begin{equation*}\label{P3:eq1}
+    p(x,y) y' + q(x,y) = 0 \tag{\(\star\)}
+\end{equation*}
+Donde
+\[
+    p(x,y) = \frac{\partial F(x,y)}{\partial y}
+    \qquad
+    q(x,y) = \frac{\partial F(x,y)}{\partial x}
+.\]
+Muestre que tenemos
+\[
+    \frac{\partial p(x,y)}{\partial x}
+    =
+    \frac{\partial q(x,y)}{\partial y}
+.\]
+
+Para el recíproco, una ecuación diferencial de primer orden como la
+de arriba~\eqref{P3:eq1} (con coeficientes arbitrareos \(p(x,y)\) y \(q(x,y)\))
+que satisface la
+última ecuación es llamada \textbf{exacta}. Muestre que si la ecuación es
+exacta, entonces existe una función \(F\) (como la de arriba) correspondiente.
+Encuentre una fórmula explícita para \(F\) en términos de \(p\) y \(q\). ¿Está
+\(F\) determinada de manera única por \(p\) y \(q\)?
+
+Muestre que
+\[
+    (4bxy + 3x + 5)y' + 3x^2 + 8ax + 2by^2 + 3y = 0
+\]
+es exacta. Encuentre \(F\) y las soluciones.
+\end{problema}
+\begin{proof}
+Supongamos que \(y(x)\) es solución del sistema. Dado que \(F(x,y) \equiv 0\), la
+derivada también debe ser nula. Luego, por la regla de la cadena tenemos que
+\[
+    0
+    =
+    d_x F(x,y(x))
+    =
+    \partial_x F(x,y) + \partial_y F(x,y) y'
+    =
+    q(x,y) + p(x,y) y'
+.\]
+
+Como \(F\) es de clase \(C^2\), el teorema de Clairaut nos dice que el orden de las
+segundas derivadas es intercambiable. El resultado es directo pues
+\[
+    \partial_y q(x,y) = \partial_y \partial_x F(x,y)
+    =
+    \partial_x \partial_y F(x,y) = \partial_x p(x,y)
+.\]
+
+Ahora veamos el converso. Supongamos que tenemos funciones \(p(x,y), q(x,y)\) que
+satisfacen
+\[
+    \partial_y q(x,y) = \partial_x p(x,y)
+    \hspace{.5cm} \text{y} \hspace{.5cm}
+    p(x,y)y' + q(x,y) = 0
+.\]
+
+Reexpresando la segunda ecuación como
+\[
+    p(x,y) dy + q(x,y) dx = 0
+\]
+e integrando sobre un camino cerrado con interior (\(C^{\circ}\)) acotado y
+simplemente conexo (muchas hipótesis, pero como tenemos todo \(\mathbb{R}^2\)
+para elegir, le damos nomás) tenemos que (por Green)
+\[
+    \int_{C} p(x,y) dy + q(x,y) dx
+    =
+    \int_{C^{\circ}} \partial_x p(x,y) - \partial_y q(x,y) dx dy
+    =
+    0
+.\]
+Definamos entonces
+\[
+    F(x,y)
+    =
+    \int_{C} p(x,y) dy  + q(x,y) dx
+.\]
+De esta forma,
+\[
+    \partial_y F(x,y)
+    =
+.\]
+
+Veamos que el sistema
+\[
+    \underbrace{(4bxy + 3x + 5)}_{p(x,y)}y'
+    +
+    \underbrace{3x^2 + 8ax + 2by^2 + 3y}_{q(x,y)}
+    = 0
+\]
+es exacto. Basta comparar derivadas parciales
+\[
+    \partial_x p(x,y) = 4by + 3 = \partial_y q(x,y)
+.\]
+Así que es exacta. Luego,
+\[
+    F(x,y) = \int 4bxy + 3x + 5 dx = 2byx^2 + \frac{3}{2} x^2 + 5x + C(y)
+.\]
+Donde \(C(y)\) es una constante dependiendo de \(y\). Finalmente, las soluciones
+están dadas por (usando que \(F(x,y) = 0\))
+\[
+    y(x) = -\frac{(3/2)x^2 + 5x - C(y)}{2bx^2}
+.\]
+
+\end{proof}
+
+% PROBLEMA 4
+\begin{problema}
+Sean \(\tau > 0\) y \(\gamma > 0\) constantes. Considere el problema de valor
+inicial
+\[
+    \dot{x} = \gamma \sqrt{\abs{x}} - \tau x
+    ,\qquad x(0) = x_0
+.\]
+\begin{plist}
+    \item Resuelva el problema. (\textit{Sugerencia}: La EDO es de tipo
+    Bernoulli).
+
+    \item Analice la unicidad de la solución y determine el intervalo máximo de
+    definición. Si hay falla de unicidad, explique por qué esto no contradice el
+    teorema de Picard-Lindelöf.
+
+    \item Analice el comportamiento a largo plazo (\(t\to \infty\)) cuando \(x_0
+    > 0\).
+\end{plist}
+\end{problema}
+\begin{proof}\ \\
+\begin{plist}
+    \item En primer lugar notemos que el sistema es autónomo.
+
+    Para \(x_0 = 0\), la función \(x\equiv 0\) es una solución.
+
+    Para \(x_0 > 0\), la ecuación queda
+    \[
+       \dot{x} = \gamma x^{1/2} - \tau x
+    .\]
+    La cual es Bernoulli con \(n = 1/2\). Luego, el cambio de variables \(y =
+    x^{1/2}\) nos da el sistema lineal
+    \[
+       \dot{y}
+       =
+       \frac{\gamma - \tau y}{2}
+    .\]
+    Con intervalo máximal en \(y\) de \(y_2 = \frac{\tau}{\gamma}\) y \(y_1
+    = -\infty\).
+
+    Usando el método del propagador obtenemos que la solución es
+    \[
+        y
+        =
+        x_0 \exp\left(-\frac{\tau}{2} \int_{0}^{t} ds\right)
+        +
+        \frac{\gamma}{2}
+            \int_{0}^{t} \exp \left(-\frac{\tau}{2} \int_{s}^{t} ds\right) ds
+        =
+        x_0 e^{-\frac{\tau t}{2}}
+        +
+        \frac{\gamma}{\tau} \left(1 - e^{-\frac{\tau t}{2}}\right)
+    .\]
+    Como el sistema es autónomo y lineal, vale para todo tiempo \(t\) (ya que
+    los coeficientes del sistema son continuos).
+
+    Para \(x_0 < 0\) el mismo cambio de variables nos arroja la misma solución
+    (reemplazando \(x_0\) con \(-x_0\)).
+
+    \item Primero reescribamos la ecuación en términos de \(x\)
+    \[
+        x =
+        \pm
+        \left(
+            \abs{x_0} e^{-\frac{\tau t}{2}}
+            +
+            \frac{\gamma}{\tau} \left(1 - e^{-\frac{\tau t}{2}}\right)
+        \right)^2
+    .\]
+
+    Podemos notar múltiples soluciones para \(x_0 = 0\), esto no contradice
+    Picard-Lindelöf pues la función \(f(t,x) = \gamma \sqrt{\abs{x}} - \tau x\)
+    no es Lipschitz en \(x\) cerca de \(0\), en efecto \(\frac{\gamma \sqrt{\abs{x}}
+    - \tau x - 0}{x - 0}\) no es acotada.
+
+    \item Para \(x_0 > 0\), tomando el límite vemos que
+    \[
+        \lim_{t\to\infty} x(t) = \pm \left(\frac{\gamma}{\tau}\right)^2
+    .\]
+    Así que dependiendo de la solución que escogamos, esta se pegará a
+    \((\gamma/\tau)^2\) o \(-(\gamma/\tau)^2\).
+\end{plist}
+\end{proof}
+
+% PROBLEMA 5
+\begin{problema}
+Considere el problema de valor inicial
+\[
+    \dot{x} = x^3 - e^{t^2} x^2,\qquad x(0) = \xi
+    \qquad\qquad (t,x) \in [0,\infty)\times \mathbb{R}
+.\]
+\begin{plist}
+    \item Identifique y dibuje la 0-isoclina de la ecuación.
+
+    \item Demuestre que para \(\xi \in [0,1]\), la solución \(x(t)\) está
+    definida para todos \(t \ge 0\) y que \(\lim_{t \to \infty} x(t) = 0\).
+
+    \item Pruebe que cuando \(\xi \ge \xi_0\) es suficientemente grande,
+    \(x(t)\) explota en tiempo finito. (\textit{Sugerencia:} Construya una
+    subsolución de la forma \(y(t) = e^{t^2} g(t)\) que explota en tiempo
+    finito).
+\end{plist}
+\end{problema}
+\begin{proof}
+\begin{plist}
+    \item LLamemos \(f(t,x)\) al lado derecho de la ecuación.
+    Luego, la 0-isoclina corresponde a la curva de nivel \(f(t,x) = 0\).
+    \[
+        \left\{ f(t,x) = 0 \right\}
+        =
+        \left\{
+            x = 0
+        \right\}
+        \cup
+        \left\{
+            x = e^{t^2}
+        \right\}
+    .\]
+    \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \def\dmin{0};
+        \def\dmax{1.1};
+
+        \pgfmathsetmacro\rmin{\dmin-.5};
+        \pgfmathsetmacro\rmax{e^(\dmax^2)};
+
+        \clip (\rmin, {\rmax+.1}) rectangle ({2*\dmax +.1}, 2*\rmin);
+
+        \draw[lightgray,dashed,step=1cm] (\dmin, \rmax) grid ({2*\dmax},
+        {2*\rmin});
+
+        \draw[->] (0, \rmin) -- (0, \rmax) node[left] {\(x\)};
+        \draw[->] (\rmin, 0) -- ({2*\dmax}, 0) node[below] {\(t\)};
+
+        \draw[thick, blue] (\rmin, 0) -- ({2*\dmax}, 0);
+
+        \draw[domain=\dmin:\dmax, smooth, variable=\t, red]
+            plot ({\t}, {e^(\t^2)});
+
+        \node[fill=white] at (.3, 1.8) {+};
+        \node[fill=white] at (.3, .5) {-};
+        \node[fill=white] at (.3, -.5) {-};
+    \end{tikzpicture}
+    \caption{En rojo la curva \(x = e^{t^2}\) y en azul \(x = 0\)}
+    \end{figure}
+
+    \item Primero veamos los bordes. Para \(\xi = 0\), la derivada es nula en
+    toda la vecindad y no tiene escapatoria así que se queda dentro de la
+    solución \(x=0\). Para \(\xi = 1\), la derivada también es nula, sin
+    embargo, en la vecindad la derivada es negativa, luego, la solución que pasa
+    por aquí debe bajar. Así mismo, para \(\xi \in (0,1)\) la derivada es
+    negativa así que la solución debe bajar. Dado que en \(x = 0\) tenemos una
+    0-isoclina/asíntota, las soluciones se estancan en este valor, esto a su vez
+    no asegura que ninguna solución explota en tiempo finito.
+
+    \item Consideremos \(\xi \ge \xi_0 \gg 1\) (muy sobre la zona roja),
+    aquí la derivada es positiva y la curva \(e^{t^2}\) es una subsolución.
+    Necesitamos una subsolución que explote en tiempo finito.
+    Consideremos
+    \[
+        y(t) = - \xi_0 \frac{e^{t^2}}{t-1}
+        \qquad
+        0 \le t < 1
+    .\]
+    Luego, \(y(0) = \xi_0\) y
+    \[
+        \dot{y} =
+        -\xi_0 e^{t^2} \left(\frac{2t}{t-1} - \frac{1}{(t-1)^2}\right)
+        <
+        f(t,y) =
+        -\xi_{0} e^{t^2} \left(
+            \frac{\xi_0^2 e^{2t^2}}{(t-1)^3} - \frac{e^{2t^2}}{(t-1)^2}
+        \right)
+    .\]
+    Así que, en efecto, es una subsolución y explota en \(t=1\), por lo tanto
+    cualquier otra solución con PVI sobre \(\xi_0\) explota en tiempo finito.
+\end{plist}
+\end{proof}
+
+% PROBLEMA 6
+\begin{problema}[Bifurcaciones]
+Describa cómo cambia el retrato de fase correspondiente a la ecuación dada
+cuando varía el parámetro \(r\in \mathbb{R}\) (ie. dibuje el diagrama de
+bifurcaciones). Clasifique las bifurcaciones que ocurren y calcule el(los)
+valor(es) de bifuración de \(r\):
+\begin{plist}
+    \item \(\dot{x} = rx - \frac{x}{1+x^2}\).
+    \item \(\dot{x} = x^3 - 2x^2 - 3x - rx\).
+\end{plist}
+\end{problema}
+\begin{proof}
+\begin{enumerate}[
+label=(\alph*),topsep=0pt,itemsep=0pt,leftmargin=1.5em,rightmargin=1em]
+\item \(\dot{x} = rx - \frac{x}{1+x^2}\) \\
+   Grafiquemos la curva de nivel \(f(x,r) = 0\). Esto es, el conjunto
+   \[
+       \left\{ rx - \frac{x}{1+x^2} = 0 \right\}
+       =
+       \left\{ x = 0 \right\}
+       \cup
+       \left\{ r = \frac{1}{1+x^2} \right\}
+   .\]
+
+\sideToSide{.45}%
+{%
+    \begin{figure}[H]
+    \caption{Gráfico de la curva de nivel \(f(x,y) = 0\).}
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        grid=both,
+        grid style={very thin, gray!20!white},
+        axis lines = middle,
+        xlabel = {\(x\)},
+        ylabel = {\(r\)},
+        xmin=-2, xmax=2,
+        ymin=-1, ymax=2]
+
+    \addplot[red,samples=500,thick] {1/(1+x^2)};
+    \addplot[red,thick] coordinates {(0,-2)(0,2)};
+
+    \node[label=Positivo] at (axis cs: 1,1) {};
+    \node[label=Positivo] at (axis cs: -1,-.7) {};
+    \node[label=Negativo] at (axis cs: -1,1) {};
+    \node[label=Negativo] at (axis cs: 1,-.7) {};
+    \end{axis}
+    \end{tikzpicture}
+    \end{figure}
+}%
+{%
+    Luego la clasificación de puntos es
+    \begin{itemize}[itemsep=0pt, leftmargin=2em, rightmargin=2em]
+        \item Si \(r \le 0\) hay un solo punto de equilibrio y es estable.
+        \item Para \(0 < r < 1\) hay tres puntos de equilibro. De izquieda a
+        derecha (según el gráfico) tenemos la secuencia
+        {\it inestable-estable-inestable}.
+        \item Para \(r\ge 1\) tenemos un solo punto de equilibrio y es
+        inestable.
+    \end{itemize}
+    La bifurcación es de tipo Pitchfork con \(r_c = 1\).
+}
+
+    \item \(\dot{x} = x^3 - 2x^2 - 3x - rx\).
+    Graficamos la curva de nivel de \(f(x,r)\).
+    \[
+        \left\{ f(x,r) = 0 \right\}
+        =
+        \left\{ x = 0 \right\}
+        \cup
+        \left\{ r = (x-3)(x+1) \right\}
+    .\]
+
+\sideToSide{.5}%
+{
+    \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        grid=both,
+        grid style={very thin, gray!20!white},
+        axis lines = middle,
+        xlabel = {\(x\)},
+        ylabel = {\(r\)},
+        xmin=-5, xmax=5,
+        ymin=-5, ymax=5]
+
+    \addplot[red,samples=500,thick] {(x-3)*(x+1)};
+    \addplot[red,thick] coordinates {(0,-5)(0,5)};
+
+    \node[label=Negativo] at (axis cs: 1.5,1.5) {};
+    \node[label=Negativo] at (axis cs: -3,-2.5) {};
+    \node[label=Positivo] at (axis cs: 4,-4) {};
+    \node[label={[rotate=-60]:Positivo}] at (axis cs: -1.5,3) {};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Gráfico de la curva de nivel \(f(x,y) = 0\).}
+    \end{figure}
+}%
+{%
+    Luego, la clasificación de puntos es
+    \begin{itemize}[itemsep=0pt, leftmargin=2em, rightmargin=2em]
+        \item Si \(r < -4\) hay un solo punto de equilibrio y es {\it inestable}.
+        \item Si \(r = -4\) hay dos puntos de equilibrio y ambos son {\it
+        inestables}.
+        \item Si \(-4 < r < -3\) hay tres puntos de equilibrio y siguen la
+        secuencia {\it inestable-estable-inestable}.
+        \item Si \(r = -3\) hay dos puntos de equilibrio y son
+        {\it semiestable-inestable}.
+        \item Si \(r > -3\) hay tres puntos de equilibrio y siguen la secuencia
+        {\it inestable-estable-inestable}.
+    \end{itemize}
+    La bifurcación es de tipo transcrítico con \(r_c = -3\).
+}
+\end{enumerate}
+\end{proof}
+
+% PROBLEMA 7
+\begin{problema}[Efecto Alle]
+Para ciertas especies de animales, la razón de crecimiento efectiva de su
+población, \(\dot{x}/x\), es máximal cuando la población llega a cierto nivel
+positivo \(x = b > 0\). Una manera de modelar este fenómeno es por la ecuación
+\[
+    \frac{\dot{x}}{x} = r\left(a - (x/b - 1)^2\right),
+    \qquad a,b,r > 0
+.\]
+Determine las condiciones necesarias y suficientes para los parámetros positivos
+\(r,a,b\) para que exista un crítico nivel de población inicial \(x_c > 0\) tal que
+si \(0 < x(0) < x_c\), la población se extingue a largo plazo.
+\end{problema}
+\begin{proof}
+Llamemos \(f(x,r,a,b)\) a la función del lado derecho. Veamos cuando es cero.
+\[
+    \left\{ r \left(a - \left(\frac{x}{b} -1\right)^2\right) = 0 \right\}
+    \overset{r>0}{=}
+    \left\{ a = \left(\frac{x}{b} - 1\right)^2 \right\}
+.\]
+Los puntos fijos están dados por la intersección de la recta \(a\) y la parábola
+\(((x/b)-1)^2\).
+
+\sideToSide{.5}%
+{%
+Vemos que para \(a>0\) y \(b>0\) siempre habrán dos puntos fijos, llamemoslos
+\(x^{-}\) y \(x^{+}\) respectivamente (\(x^{-} \le x^{+}\)). Luego,
+\begin{clist}
+\item Para \(x < x^{-}\), la parabola está sobre la recta, así que la derivada
+es negativa.
+\item Para \(x^{-} < x < x^{+}\), la recta está sobre la parábola, así que la
+derivada es positiva.
+\item Para \(x > x^{+}\), de nuevo la recta está bajo la parábola, así que la
+derivada es negativa.
+\end{clist}
+Concluimos entonces que \(x^{-}\) es un punto inestable y \(x^{+}\) es un punto
+estable.
+
+Despejando obtenemos \(x^{-}\) explícitamente (\(x^{-} = b(1-\sqrt{a})\)) y por
+el análisis anterior vemos que para \(x(0) < x^{-} = x_c\) la población
+decrecerá hasta extinguirse. La condición necesaria es que el sistema tenga dos
+soluciones positivas distintas, esto para si y solamente si \(\sqrt{a} < 1\).
+}%
+{%
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\def\xmin{0};
+\def\xmax{4};
+\def\ymin{-.5};
+\def\ymax{2};
+
+\def\a{.5};
+\def\b{1};
+\begin{axis}[
+    grid=both,
+    grid style={very thin, gray!20!white},
+    axis lines = middle,
+    xlabel = {\(x\)},
+    ylabel = {\(y\)},
+    xmin=\xmin, xmax=\xmax,
+    ymin=\ymin, ymax=\ymax]
+
+    \addplot[red,samples=500] {(x/\b - 1)^2};
+    \addplot[red] coordinates {(\xmin,\a)(\xmax,\a)};
+
+    \draw[dashed]
+        (axis cs: {(1-sqrt(\a))*\b}, \a) -- (axis cs: {(1-sqrt(\a))*\b},0)
+        node[below] {\(x^{-}\)};
+    \draw[dashed]
+        (axis cs: {(1+sqrt(\a))*\b}, \a) -- (axis cs: {(1+sqrt(\a))*\b},0)
+        node[below] {\(x^{+}\)};
+\end{axis}
+\end{tikzpicture}
+\parbox{.7\linewidth}{
+\caption{Puntos fijos de la curva de nivel \(f(x,r,a,b) = 0\) para \(a=.5, b=1\).}
+}
+\end{figure}
+}%
+\end{proof}
+
+% PROBLEMA 8
+\begin{problema}
+Sean \(T>0\), \(M\ge 1\), y sea \(a\colon \left[0,T\right] \to \mathbb{R}^{n
+\times n}\) una función continua con valores en matrices \(n \times n\), que
+satisface
+\[
+    \abs{a(t)v} \le M\abs{v}
+    \qquad
+    \forall v\in \mathbb{R}^{n}, t\in \left[0,T\right]
+.\]
+Demuestre que si \(x\in C^2 \left(\left[0,T\right],\mathbb{R}^n\right)\) es una
+solución de problema de segundo orden
+\[
+    \begin{cases}
+        \ddot{x} = a(t) x &, (t,x) \in [0,T]\times \mathbb{R}^n,\\
+        x(0) = x_0, \dot{x}(0) = y_0 &, x_0, y_0 \in \mathbb{R}^n
+    \end{cases}
+\]
+entonces \(x(t)\) satisface la estimación
+\[
+   \abs{x(t)}
+   \le
+   \sqrt{\abs{x_0}^2 + \abs{y_0}^2} e^{Mt}
+   \qquad
+   \forall t\in [0,T]
+.\]
+\end{problema}
+\begin{proof}
+Poniendo \(u = (u_1 = x, u_2 = \dot{x})\) nos queda el sistema equivalente
+\begin{equation*}\label{p8:eq1}
+    \dot{u} = (\dot{x}, a(t) x) = f(u)
+    \quad,\quad
+    u(0) = (x_0, y_0) = u_0
+    \tag{\(\dag\)}
+\end{equation*}
+Notemos que \(\abs{u_0} = \sqrt{\abs{x_0}^2 + \abs{y_0}^2}\). Luego, por el TFC
+tenemos que
+\[
+    u - u_0 = \int_{0}^{t} \dot{u}(s) ds
+.\]
+Tomando norma tenemos que
+\[
+    \abs{u} \le \abs{u_0} + \int_{0}^{t} \abs{\dot{u}(s)} ds
+.\]
+Notemos que
+\[
+    \abs{\dot{u}(s)} = \sqrt{\abs{\dot{x}(s)}^2 + \abs{a(t)x}^2}
+.\]
+Y si dios quiere de aquí sale usando Grönwell en algún momento.
+
+\end{proof}
+\end{document}

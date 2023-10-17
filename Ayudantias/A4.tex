@@ -1,0 +1,108 @@
+\documentclass[../pheader.tex]{subfiles}
+
+\begin{document}
+{\sc Ayudantía 4 - EDO \hfill \small \rm Apuntes: Sebastian Sánchez}
+
+\begin{center}
+    \begin{tabular}{rl}
+        Docente:& Nikola Kamburov\\
+        Ayudante:& Jorge Acuña
+    \end{tabular}
+\end{center}
+
+% P1
+\begin{problema}
+Sea la EDO
+\[
+    \dot{y} = ty^2;\quad y(0) = x
+.\]
+donde su solución es \(\phi(t,x) = y(t)\). Encuentre las ecuaciones
+variacionales para \(\partial_{x}\phi(t,x), \partial_{x}^2 \phi(t,x)\) y una
+expresión explícita para \(\partial_{x}^2 \phi(t,x)\).
+\end{problema}
+Sabemos \(\phi(t,x)\) cumple la EDO, así que derivando con respecto a la
+posición tenemos (notar que \(\phi \in \mathcal{C}^2\)):
+\[\label{p1:ev1}
+    \partial_t \partial_x \phi(t,x)
+    =
+    \partial_x \partial_t \phi(t,x)
+    =
+    \partial_x \left(t(\phi(t,x)^2\right)
+    =
+    2t\phi(t,x) \partial_x \phi(t,x)
+    \tag{EV \(\partial_x \phi\)}
+.\]
+Derivando nuevamente con respecto a la posición obtenemos:
+\[\label{p1:ev2}
+    \partial_t \partial_x^2 \phi(t,x)
+    =
+    2t\left((\partial_x \phi(t,x))^2 + \phi(t,x) \cdot \partial_x^2 \phi(t,x)\right)
+    \tag{EV \(\partial_x^2 \phi\)}
+.\]
+
+En \eqref{p1:ev1}, llamemos \(z(t) = \partial_x \phi(t,x)\). Esto nos deja con
+el PVI:
+\[
+    \dot{z} = 2t\phi(t,x) z,\quad
+    z(0) = 1
+\]
+el cual es separable, así que la solución viene dada por:
+\[
+    z(t) = \exp\left(\int_{0}^{t} 2s\phi(s,x) ds \right)
+\]
+como estamos trabajando en posiciones lejos de \(0\), podemos multiplicar el
+integrando por \(\phi/\phi\) y usando la EDO original nos queda:
+\[
+    z(t)
+    =
+    \exp\left(\int_{0}^{t} \frac{2s\phi(s,x)^2}{\phi(s,x)} ds \right)
+    =
+    \exp\left(\int_{0}^{t} \frac{2 \delta_s \phi(s,x)}{\phi(s,x)} ds \right)
+    =
+    \abs{\frac{\phi(t,x)}{\phi(0,x)}}^2
+    =
+    \frac{\phi(t,x)^2}{x^2}
+\]
+deshaciendo el cambio de variables vemos que
+\[
+    \partial_x \phi(t,x)
+    =
+    \frac{\phi(t,x)^2}{x^2}
+.\]
+
+% P2
+\begin{problema}
+Muestre que en una dimensión, y si \(f\in \mathcal{C}^1\), se tiene
+\[
+    \frac{\partial\phi}{\partial x}(t,x)
+    =
+    \exp \left(\int_{t_0}^{t} \frac{\partial f}{\partial x}(s, \phi(s,x)) ds \right)
+.\]
+\end{problema}
+
+% P3
+\begin{problema}
+Considere una ecuación de primer orden en \(\mathbb{R}^1\) con \(f(t,x)\colon
+\mathbb{R}\times \mathbb{R}\to \mathbb{R}\) continua. Suponga que \(xf(t,x) <
+0\) para \(\abs{x} > R\). Muestre que todas las soluciones existen para todo
+\(t > 0\).
+\end{problema}
+
+% P4
+\begin{problema}
+Sea \(f\in \mathcal{C}\left(\mathbb{R}\times \mathbb{R}^{n},
+\mathbb{R}^n\right)\) y
+\[
+    \abs{f(t,x)} \le g(\abs{x})
+\]
+para alguna función \(g\in \mathcal{C}([0,\infty)\) que satisface
+\[
+    \int_{0}^{\infty} \frac{dr}{g(r)} = \infty
+.\]
+Entonces todas las soluciones del PVI
+\[
+    \dot{x} = f(t,x); \quad x(t_0) = x_0
+\]
+están definidas para todo \(t\ge 0\).
+\end{problema}
+\end{document}

@@ -1,0 +1,539 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{tikz,pgfplots}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usetikzlibrary{babel}
+
+\usepackage{mdframed}
+
+\usepackage{amstext} % for \text macro
+\usepackage{array}   % for \newcolumntype macro
+\newcolumntype{C}{>{$}c<{$}} % math-mode version of "c" column type
+\newcolumntype{L}{>{$}l<{$}} % math-mode version of "l" column type
+
+\newcounter{problemctr}[section]
+\newenvironment{problema}{
+    \refstepcounter{problemctr}
+    \mdfsetup{%
+        frametitle={\tikz\node[fill=white,rectangle,inner sep=1pt,outer
+        sep=1pt]{Problema \theproblemctr};},
+        frametitleaboveskip=-0.5\ht\strutbox,
+        frametitlealignment=\center
+    }%
+    \begin{mdframed}[style=exampledefault]
+    }{\end{mdframed}
+}
+
+
+\usepackage[T1]{fontenc}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\DeclareMathOperator\dom{dom}
+
+\begin{document}
+{\sc Tarea 3 - EDO\hfill Sebastián Sánchez}
+
+\begin{center}
+\textbf{Agradecimientos:} Pablo Navarro.
+\end{center}
+
+%P1
+\begin{problema}
+    Sean \(A,B \in \mathbb{R}^{n\times n}\). Demuestre que el sistema lineal
+    \[
+        \dot{x} = (\sin(t) A + e^{-t} B)x
+    \]
+    es estable, es decir, que todas sus soluciones permanecen acotadas para
+    \(t\ge 0\).
+\end{problema}
+% R1
+Consideremos el sistema no perturbado \(\dot{x} = \sin(t) A x\). Notemos que es
+periódico con \(T=2\pi\) y tiene coeficientes continuos.
+Sabemos que las soluciones a este sistema son de la forma:
+\[
+    x(t) = \Pi(t,t_0) K,\quad K\in \mathbb{R}
+.\]
+Donde \(\Pi(t,t_0)\) denota al propagador. Por el teorema de Floquet se tiene:
+\[
+    \Pi(t,t_0) = P(t,t_0) \exp\left((t-t_0)Q(t_0)\right)
+\]
+y sabemos que \(\norm{P(t,t_0)} \le C_2\) para algún \(C_2 \in \mathbb{R}\).
+
+La misión entonces es acotar \(\norm{\exp\left((t-t_0) Q(t_0)\right)}\) pues en ese
+caso tenemos que
+\[
+    \int_{0}^{\infty} \norm{e^{-t}B} dt
+    \le
+    \int_{0}^{\infty} e^{-t}\norm{B} dt
+    < \infty
+\]
+y por teorema se concluiría que el sistema es estable.
+
+Para acotar \(\norm{\exp\left((t-t_0) Q(t_0)\right)}\) necesitamos
+caracterizarla un poco más. Dado que \(\sin(t) A \sin(t_0) A = \sin(t_0) A \sin(t)
+A\), el propagador de nuestro sistema está dado por la fórmula
+\[
+    \Pi(t,t_0)
+    =
+    \exp\left(\int_{t_0}^{t} \sin(s) A ds \right)
+    =
+    \exp\left((\cos(t_0) - \cos(t)) A\right)
+    =
+    e^{-\cos(t)A} e^{\cos(t_0) A}
+\]
+y por lo tanto
+\[
+    \norm{\Pi(t,t_0)} \le e^{2\norm{A}} < \infty
+\]
+así que comparando con la forma que nos da Floquet deducimos que
+\[
+    \norm{e^{(t-t_0) Q(t_0)}} < \infty
+.\]
+
+% P2
+\begin{problema}
+    Considere el sistema \(\dot{x} = (A+B(t))x\) donde
+    \[
+        A =
+        \begin{pmatrix}
+        -4 & 2\\
+        3 & -2
+        \end{pmatrix}
+        \hspace{1cm}y\hspace{1cm}
+        B(t) =
+        \begin{pmatrix}
+        e^{-t^2} & \epsilon \cos(t)\\
+        \epsilon \sin(t) & -1/(t^2+1)
+        \end{pmatrix}
+        \quad, \epsilon \in \mathbb{R}
+    .\]
+    Demuestre que existe \(\epsilon_0>0\), tal que si \(\abs{\epsilon} <
+    \epsilon_0\), todas las soluciones del sistema \(x(t) \to 0\) cuando \(t\to
+    \infty\).
+\end{problema}
+% R2
+Consideremos el sistema no pertubado \(\dot{x} = Ax\).
+El propagador asociado este sistema es
+\[
+	\Pi_A(t,t_0) = \exp\left((t-t_0) A\right)
+.\]
+Notar que los valores propios de \(A\) son \(z_{\pm} = -3 \pm \sqrt{7}\) ambos
+reales negativos, así que las soluciones a este sistema son asintóticamente
+estables.
+
+Consideremos el sistema perturbado
+\[
+	\dot{x} = Ax + \underbrace{\begin{pmatrix} e^{-t^2} & 0\\ 0 & -1/(t^2+1)
+	\end{pmatrix}}_{D(t)}
+.\]
+Como \(\norm{D(t)} \xrightarrow{t\to \infty} 0\) y \(A\) es AE (y constante), el sistema
+entero es AE. Además, existen constantes \(C, \alpha > 0\) tal que
+\[
+	\Pi_{A+D}(t,s) \le C e^{-\alpha(t-s)}
+.\]
+Finalmente, llamemos \(H(t) = B(t) - D(t)\). Sabemos que \(\norm{H(t)} <
+\abs{\epsilon}\). Luego, para \(\abs{\epsilon} < \alpha/C \eqqcolon \epsilon_0\) se tiene que
+\[
+	\Pi_{A+B}(t,s) \le K e^{-(\alpha - \abs{\epsilon}C)(t-s)}
+	\xrightarrow{t\to \infty} 0
+.\]
+Por lo tanto el sistema es AE.
+
+% P3
+\begin{problema}
+    Suponga que {\hfill Teschl. Problem 3.44}
+    \[
+        \int_{0}^{\infty} \norm{A(t)} dt < \infty
+    .\]
+    Muestre que todas las soluciones de \(\dot{x}(t) = A(t)x(t)\) convergen a un
+    límite, es decir, para \(x(t)\) solución se tiene que
+    \[
+        \lim_{t \to \infty} x(t) = x_{\infty}
+    .\]
+
+    (\textit{Hint:} Muestre que todas las soluciones están acotadas y use la
+    ecuación integral correspondiente.)
+\end{problema}
+Sabemos que las soluciones a este sistema son de la forma
+\[
+	x(t) = \Pi(t,t_0) x_0 \quad t\ge t_0 \ge 0
+.\]
+
+Tomando norma y usando la hipótesis vemos que las soluciones son acotadas, en
+efecto:
+\[
+	\abs{x(t)}
+	\le
+	\norm{\Pi(t,t_0)} \abs{x_0}
+	\le
+	e^{\int_{t_0}^{t} \norm{A(s)} ds} \abs{x_0}
+	< \infty
+.\]
+LLamemos \(M\) a una cota superior.
+
+Para ver la convergencia, escribamos la ecuación integral,
+\[
+	x(t) = x_0 + \int_{t_0}^{t} A(s)x(s) ds
+,\]
+y notemos que para \(t\) suficientemenete grande y \(s > t\) se tiene que:
+\[
+	\abs{x(s) - x(t)}
+	=
+	\abs{\int_{t}^{s} A(r) x(r) dr}
+	\le
+	M
+	\int_{t}^{s} \norm{A(r)} dr
+.\]
+Dado que \(\int_{0}^{\infty} \norm{A} < \infty\), la `cola' debe ir a cero,
+es decir, para todo \(\epsilon > 0\) existe un \(T\) tal que
+\[
+	\int_{T}^{\infty} \norm{A(r)} dr < \epsilon/M
+.\]
+Luego, si \(t > T\) se sigue que:
+\[
+	\abs{x(s) - x(t)}
+	\le
+	M \int_{t}^{s} \norm{A(r)} dr
+	\le
+	M \int_{T}^{\infty} \norm{A(r)} dr
+	< \epsilon
+\]
+y por lo tanto la solución \(x(t)\) es convergente.
+
+% P4
+\begin{problema}
+\begin{enumerate}[label=(\alph*)]
+    \item
+    Sea \(H\) un espacio de producto interno y \(\left\{ u_j \right\}_{j=0}^{\infty}
+    \subset H\) un conjunto ortonormal
+    (numerable). Para \(f\in H\), muestre que
+    \[
+        f_n = \sum_{j=0}^{n} \langle u_j, f \rangle u_j
+    \]
+    es una secuencia de Cauchy.
+
+    \item
+    Muestre que si \(A\) es acotado, entonces todo valor propio \(\alpha\) de
+    \(A\) satisface \(\abs{\alpha} \le \norm{A}\).
+\end{enumerate}
+\end{problema}
+\begin{enumerate}[label=(\alph*)]
+	\item % 4.a
+	Por Pitágoras y la desigualdad de Bessel:
+	\[
+		\norm{f_n}^2
+		=
+		\sum_{j=0}^{n} \abs{\langle u_j, f\rangle}^2
+		\le
+		\norm{f}^2
+	.\]
+	Así que la sucesión \(\norm{f_n}^2\) es convergente, pues es creciente y
+	acotada. Luego
+	\[
+		\lim_{n\to \infty} \norm{f_n}^2
+		=
+		\lim_{n\to \infty} \sum_{j=0}^{n} \abs{\langle u_j, f\rangle}^2
+		< \infty
+	\]
+	y para que la serie converja, es necesario que la cola se vaya a cero. Así
+	para \(\epsilon > 0\) existe un \(N\) tal que
+	\[
+		\sum_{j=N+1}^{M} \abs{\langle u_j, f\rangle}^2 < \varepsilon
+		,\quad \forall M \ge N
+	\]
+	es decir,
+	\[
+		\norm{f_M - f_N}^2 < \varepsilon
+	\]
+	obteniéndose lo pedido.
+
+	\item % 4.b
+	Sea \(\alpha\) un valor propio de \(A\), tomemos \(f\) un vector propio
+	asociado de norma \(1\). Luego
+	\[
+		\norm{A}
+		=
+		\sup_{\norm{g} = 1} \norm{Ag}
+		\ge
+		\norm{Af}
+		=
+		\norm{\alpha f}
+		=
+		\abs{\alpha}
+	.\]
+	Donde en la primera igualdad usamos que \(A\) es acotado.
+\end{enumerate}
+
+
+% P5
+\begin{problema}
+    Sea \(H\) un espacio de producto interno. Muestre que el conjunto de
+    funciones infinitamente diferenciables con soporte compacto
+    \(\mathcal{C}^{\infty}_{c}\left((a,b), \mathbb{C}\right)\) es denso en
+    \(H\).
+
+    (\textit{Hint:} Reemplace P(x) en la demostración del lema 5.8 por
+    \(\int_{0}^{x} \exp((y(y-1))^{-1}) dy/\int_{0}^{1} \exp((y(y-1))^{-1}) dy\))
+\end{problema}
+
+% P6
+\begin{problema}
+    Sean \(\alpha, \beta\in \mathbb{R}\), \(\alpha > 0\). Considere el PVF
+    \[
+        \begin{cases}
+            -u'' + \alpha u' = f(x) &, x\in (0,1)\\
+            u + \beta u' = 0 &, x = 0, 1
+        \end{cases}
+    ,\]
+    donde \(f\in \mathcal{C}[0,1]\).
+    \begin{enumerate}[label=(\alph*)]
+        \item
+        Pruebe que existe una única solución del problema si y solo si
+        \(\alpha \beta \ne -1\).
+
+        \item
+        Para \(\alpha \beta \ne 1\), determine la \textit{función de Green}
+        correspondiente, i.e. la función \(G\colon [0,1]^2 \to \mathbb{R}\) tal
+        que para cualquier \(f\in \mathcal{C}[0,1]\) la solución del problema es
+        \[
+            u(x) = \int_{0}^{1} G(x,t) f(t) dt
+        .\]
+    \end{enumerate}
+\end{problema}
+\begin{enumerate}
+	\item % 6.a
+	Transformemos el problema en uno de Sturm-Liouville. Multiplicando por el
+	factor integrante \(e^{-\alpha x}\) obtenemos que la EDO es equivalente a
+	resolver el sistema:
+	\[
+		Lu = (e^{-\alpha x} u')' = e^{-\alpha x} f(x)
+	\]
+	con dominio las condiciones de frontera \(B_0 u = B_1 u = u + \beta u' = 0\).
+
+	Para que tenga solución única, \(z=0\) no debe ser valor propio, es decir
+	\(Lu \ne 0\). Veamos cuándo se cumple esto.
+	\[
+		Lu = 0 \iff -u'' + \alpha u' = 0 \iff u(x) = c_1 + c_2 e^{-\alpha x}
+	.\]
+	Mirando las condiciones de frontera, tenemos que
+	\[
+	\begin{cases}
+		x=0 & c_1 + c_2 - \alpha \beta c_2 = 0\\
+		x=1 & c_1 + c_2 e^{-\alpha} - \alpha \beta c_2 e^{-\alpha} = 0
+	\end{cases}
+	.\]
+	Despejando \(1-\alpha\beta\) de la primera ecuación y poniéndola en la
+	segunda llegamos que \(c_1 (1-e^{-\alpha}) = 0\). Dado que \(\alpha > 0\),
+	\(c_1 = 0\), se sigue que \(c_2 (1-\alpha\beta) = 0\), así que para \(c_2 =
+	0\) o \(\alpha\beta = 1\) se cumple la igualdad.
+
+	Concluimos entonces, que \(\alpha\beta \ne 1\) para que \(z = 0\) no sea
+	valor propio. En tal caso la solución de \(Lu = e^{-\alpha x} f(x)\) es
+	única.
+
+	\item % 6.b
+	Para \(\alpha\beta \ne 1\), el operador \(L\) es invertible y está dado por
+	la fórmula:
+	\[
+		u(x)
+		=
+		\frac{1}{W} \left(
+			u^{1}(x) \int_{0}^{x} u^{0}(t) e^{-\alpha t} f(t) dt
+			+
+			u^{0}(x) \int_{x}^{1} u^{1}(t) e^{-\alpha t} f(t) dt
+		\right)
+		=
+		\int_{0}^{1} G(x,t) f(t) dt
+	\]
+	donde \(-W G(x,t)\) vale \(u^{1}(x) u^{0}(t)\) para \(x \le t\) y \(u^{0}(x)
+	u^{1}(t)\) para \(x\ge t\).
+
+	Tomemos \(u^{0}(x) = -(1-\alpha\beta) + e^{-\alpha x}\) y \(u^1(x) =
+	-(1-\alpha \beta) + e^{\alpha (1-x)}\). Calculemos \(W\).
+	\[
+		W = \abs{
+		\begin{matrix}
+			-(1-\alpha\beta) + e^{\alpha(1-x)} & -(1-\alpha\beta) + e^{-\alpha x}\\
+			-\alpha e^{\alpha(1-2x)} & -\alpha e^{-2\alpha x}
+		\end{matrix}
+		}
+		\overset{x=0}{=}
+		\alpha (1-e^{\alpha})
+	.\]
+	De esta forma,
+	\[
+		G(x,t)
+		=
+		-\frac{1}{\alpha(1-e^{\alpha})}
+		\begin{cases}
+		{\left(\alpha \beta\alpha + e^{\left(\alpha t\right)} - 1\right)}
+		{\left(\alpha \beta\alpha + e^{\left(-\alpha {\left(x - 1\right)}\right)}
+		- 1\right)} & x \le t\\
+		{\left(\alpha \beta + e^{\left(\alpha x\right)} - 1\right)}
+		{\left(\alpha \beta + e^{\left(-\alpha {\left(t - 1\right)}\right)} -
+		1\right)} & x \ge t
+		\end{cases}
+	.\]
+\end{enumerate}
+
+% P7
+\begin{problema}
+    Encuentre los valores propios y las funciones propias del operador de
+    Sturm-Liouville definido por
+    \[
+        Ly = -y'',\quad
+        \dom L \coloneqq \left\{ u\in \mathcal{C}^2[0,1]\colon u(0)=u'(1)=0 \right\}
+    .\]
+\end{problema}
+Tenemos que resolver la ecuación \(-y'' - \lambda y = 0\). Las soluciones a este
+sistema están determinadas por la ecuación característica \(-z^2 - \lambda =
+0\). Veamos los distintos casos:
+\begin{itemize}
+	\item Caso \(\lambda = 0\): \(y\) es una función lineal y las condiciones de
+	frontera nos dicen que \(y\equiv 0\).
+
+	\item Caso \(\lambda < 0\): \(z = \pm \sqrt{\abs{\lambda}}\) y las
+	soluciones son de la forma \(y(x) = c_1 e^{x z_{+}} + c_2 e^{x z_{-}}\).
+	Aplicando las condiciones de frontera se concluye que \(y \equiv 0\).
+
+	\item Caso \(\lambda > 0\):
+	\(z = \pm \sqrt{\lambda} i\) y las soluciones son de la forma
+	\(y(x) = c_1 \cos(x\sqrt{\lambda}) + c_2 \sin(x\sqrt{\lambda})\).
+	Aplicando las condiciones de frontera, nos da que
+	\[
+	\begin{cases}
+		0 = y(0) = c_1 \cos(0) + c_2 \sin(0)
+			&\implies c_1 = 0\\
+		0 = y'(1) = c_2 \cos(\sqrt{\lambda}) \sqrt{\lambda}
+			&\implies c_2 = 0 \lor \sqrt{\lambda} = \frac{\pi}{2} + k\pi
+	\end{cases}
+	\]
+	donde \(k\in \mathbb{N}\). Luego, los valores propios son \(\lambda_{k} =
+	(\pi/2 + k\pi)^2\) y una función propia asociada es de la forma \(y_k(x) = c_2
+	\sin(\sqrt{\lambda_k} x)\)
+\end{itemize}
+
+% P8
+\begin{problema}
+\begin{enumerate}
+	\item Demuestre la {\it Desigualdad de Sobolev}
+	\[
+		\int_{0}^{\pi} \abs{u(x)}^2 dx
+		\le
+		\int_{0}^{\pi} \abs{u'(x)}^2 dx
+	\]
+	Para todo \(u\in \mathcal{C}^{1}[0,\pi]\) con \(u(0) = u(\pi) = 0\).
+
+	\textit{Sugerencia:} Utilice el Principio de Rayleigh-Ritz para el operador
+	\(L_0 = -d^2/dx^2\) en \([0,\pi]\) con condiciones homogéneas de Dirichlet.
+
+	\item Suponga que \(q\in \mathcal{C}[0,\pi]\) satisface \(\min_{[0,\pi]} q >
+	-1\). Pruebe que los valores propios del operador de Sturm-Liouville
+	\[
+		Ly
+		=
+		-\frac{d^2 y}{dx^2} + q(x)y
+	,\]
+	con dominio \(\mathcal{D}(L) \coloneqq \left\{ u\in \mathcal{C}^2[0,\pi], u(0)
+	= u(\pi) = 0 \right\}\) son positivos.
+\end{enumerate}
+\end{problema}
+\begin{enumerate}
+	\item % 8.1
+	En primer lugar notemos que
+	\[
+		\langle u, u\rangle^2 = \int_{0}^{\pi} \abs{u(x)}^2 dx
+		\text{ y }
+		\langle u, -u''\rangle^2 = \int_{0}^{\pi} \abs{u'(x)}^2 dx
+	.\]
+	Así que debemos probar que \(\langle u, u\rangle \le \langle u,
+	-u''\rangle\).
+
+	Consideremos el operador \(L = -\frac{d^2}{dx^2}\) con dominio los \(u\) tal
+	que \(u(0) = u(\pi) = 0\). Estudiemos sus valores
+	propios, es decir, la ecuación \(-y'' - \lambda y = 0\) cuyas soluciones
+	están determinadas por las raíces de la ecuación \(-z^2 - \lambda = 0\).
+	\begin{itemize}
+		\item Caso \(\lambda = 0\colon\) Las soluciones son lineales y las condiciones de
+		frontera hacen que la única que cumpla sea la función nula.
+
+		\item Caso \(\lambda < 0\colon\) Las soluciones de la ecuación son \(z_{\pm}
+		= \pm\sqrt{\abs{\lambda}}\) y por lo tanto \(y\) es de la forma \(y(x) =
+		c_1 e^{x z_{-}} + c_2 e^{x z_{+}}\). Aplicando las condiciones de
+		frontera:
+		\[
+			\begin{cases}
+				x=0&, 0 = y(0) = c_1 + c_2\\
+				x=\pi&, 0 = y(\pi) = c_1 e^{\pi z_{-}} + c_2 e^{\pi z_{+}}
+			\end{cases}
+		.\]
+		Vemos que no hay soluciones no nulas (\(c_1 (e^{-\pi \sqrt{\lambda}} -
+		e^{\pi \sqrt{\lambda}}) = 0 \iff c_1 = 0\)).
+
+		\item Caso \(\lambda > 0\colon\) \(z_{\pm} = \pm \sqrt{\lambda} i\) y las
+		soluciones son de la forma \(y(x) = c_1 \cos(x \sqrt{\lambda}) + c_2
+		\sin(x \sqrt{\lambda})\). Aplicando las condiciones de frontera:
+		\[
+			\begin{cases}
+				x=0&, 0 = y(0) = c_1\\
+				x=\pi&, 0 = y(\pi) = c_2 \sin(\pi \sqrt{\lambda})
+			\end{cases}
+		.\]
+		Aquí \(\lambda_{k} = k^2\), y las funciones propias asociadas a
+		\(\lambda_k\) son de la forma
+		\(y_k(x) = c_{2,k} \sin\left(x k\right)\)
+	\end{itemize}
+
+	Por el principio de Rayleigh se cumple que
+	\[
+		1
+		=
+		\inf_{u\in \mathcal{D}(L)}
+		\frac{\langle u, Lu\rangle}{\langle u, u\rangle}
+		\implies
+		\langle u, u\rangle \le \langle u, Lu\rangle
+	.\]
+	Que es lo que queríamos probar.
+
+	\item % 8.2
+	Sea \(f \in \mathcal{D}(L)\) de norma \(1\). Luego,
+	\begin{align*}
+		\langle f, Lf\rangle
+		&=
+		\int_{0}^{\pi} \overline{f(x)}\left(-f''(x) + q(x) f(x)\right) dx
+		\\&=
+		\underbrace{-\overline{f(x)}f'(x)\Big\vert_{0}^{\pi}}_{0}
+		+
+		\int_{0}^{\pi} \overline{f'(x)} f'(x) dx
+		+
+		\int_{0}^{\pi} \overline{f(x)} f(x) q(x) dx
+		\\&=
+		\int_{0}^{\pi} \abs{f'(x)}^2 dx
+		+
+		\int_{0}^{\pi} \abs{f(x)}^2 q(x) dx
+		\\&\overset{1.}{\ge}
+		\int_{0}^{\pi} \abs{f(x)}^2 (1+q(x)) dx
+		\\&=
+		1 + \min_{x\in \left[0,\pi\right]} q(x) > 0
+	\end{align*}
+	Por el principio de Rayleigh los valores propios son positivos.
+\end{enumerate}
+\end{document}
+

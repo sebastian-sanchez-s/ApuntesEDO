@@ -1,0 +1,586 @@
+\documentclass[10pt]{article}
+
+\usepackage[margin=.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{tikz,pgfplots}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtools}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usetikzlibrary{babel}
+
+\usepackage{mdframed}
+
+\usepackage{amstext} % for \text macro
+\usepackage{array}   % for \newcolumntype macro
+\newcolumntype{C}{>{$}c<{$}} % math-mode version of "c" column type
+\newcolumntype{L}{>{$}l<{$}} % math-mode version of "l" column type
+
+\newcounter{problemctr}[section]
+\newenvironment{problema}{
+    \refstepcounter{problemctr}
+    \mdfsetup{%
+        frametitle={\tikz\node[fill=white,rectangle,inner sep=1pt,outer
+        sep=1pt]{Problema \theproblemctr};},
+        frametitleaboveskip=-0.5\ht\strutbox,
+        frametitlealignment=\center
+    }%
+    \begin{mdframed}[style=exampledefault]
+    }{\end{mdframed}
+}
+
+
+\usepackage[T1]{fontenc}
+
+% Resize abs and norm
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\|}{\|}
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\DeclareMathOperator\dom{dom}
+
+\begin{document}
+{\sc Tarea 4 - EDO\hfill Sebastián Sánchez}
+
+\begin{center}
+\textbf{Agradecimientos:} Camila Guajardo Vásquez, Pablo Navarro, Felipe
+Gonzáles, Claudio Melendez.
+\end{center}
+
+% P1
+\begin{problema}
+{\hfill G. Teschl - Problem 6.8}\\
+	Sea \(\phi(t)\)	la solución a un sistema autónomo de primer orden. Suponga
+	que \(\lim_{t\to \infty} \phi(t) = x\in M\). Muestre que \(x\) es un punto
+	fijo y que \(\lim_{t\to \infty} \dot{\phi}(t) = 0\).
+\end{problema}
+Dado que \(\phi(t)\) es solución, sabemos que \(\dot{\phi}(t) = f(\phi(t))\).
+Tomando límite y usando que \(f\) es continua, obtenemos que
+\[
+	\lim_{t\to \infty} \dot{\phi}(t)
+	=
+	\lim_{t\to \infty} f(\phi(t))
+	=
+	f(x)
+.\]
+Así que si \(x\) es un punto fijo se concluye que \(\lim_{t\to \infty}
+\dot{\phi}(t) = 0\). Supongamos que \(x\) no es un punto fijo, entonces,
+\(\lim_{t\to \infty} \dot{\phi}(t) \ne 0\). En particular, existe un \(\epsilon > 0\)
+y \(T>0\) tal que para todo \(t\ge T\) se tiene que \(\abs{\dot{\phi(t)}} >
+\epsilon\). Por otro lado, \(\phi(t) \xrightarrow{t\to \infty} x\), así que
+existe \(S > 0\) tal que para todo \(t, s > S\) se cumple que \(\abs{\phi(t) -
+\phi(s)} < \epsilon\). Luego, por TVM y para \(T, S\) suficientemente grandes tenemos que
+\[
+	\epsilon > \abs{\phi(t) - \phi(s)} = \abs{\dot\phi(c)} \abs{t-s} \ge \epsilon \abs{t-s}
+.\]
+El lado derecho diverge y está acotado. Contradicción.
+Concluimos entonces que \(x\) debe ser un punto fijo.
+
+% P2
+\begin{problema}
+{\hfill G. Teschl - Problem 6.10}\\
+	Un punto \(x\in M\) se dice \textbf{no errante} si en toda vecindad \(U\) de
+	\(x\) existe una sucesión \(t_n\to \infty\) de tiempos positivos tal que
+	\(\Phi_{t_n}(U)\cap U \ne \varnothing\) para todo \(t_n\). El conjunto de
+	los puntos no errantes se denota por \(\Omega(f)\).
+	\begin{enumerate}[label=(\roman*)]
+		\item \(\Omega(f)\) es un conjunto cerrado e invariante.
+		(\textit{hint:} Muestre que es el complemento de un abierto)
+
+		\item \(\Omega(f)\) contiene todas las órbitas periódicas (incluyendo
+		los puntos fijos).
+
+		\item \(\omega_{+}(x) \subseteq \Omega(f)\) para todo \(x\in M\).
+	\end{enumerate}
+	Encuentre el conjunto de los puntos no errantes \(\Omega(f)\) para el
+	sistema \(f(x,y) = (y,-x)\).
+\end{problema}
+\begin{enumerate}[label=(\roman*)]
+	\item
+	Supongamos que \(x\not\in \Omega(f)\). Probaremos que existe una vecindad
+	\(V\) de \(x\) tal que \(V\cap \Omega(f) = \varnothing\).
+
+	Como \(x\not\in\Omega(f)\), existe una vecindad \(V\) de \(x\) tal que para toda secuencia
+	de tiempos \(t_n\to \infty\) se cumple que \(\Phi_{t_n} (V) \cap V =
+	\varnothing\). Supongamos que \(y \in V\cap\Omega(f)\), entonces existe una
+	vecindad \(U \subset V\cap\Omega(f)\) y una secuencia de tiempos \(s_n\to
+	\infty\) tal que \(\Phi_{s_n}(U)\cap U \ne \varnothing\). En particular,
+	\(\varnothing \ne \Phi_{s_n}(V\cap U) \cap U \subset
+	\Phi_{s_n}(V)\cap V = \varnothing\). Contradicción. Luego, \(V\cap\Omega(f)
+	= \varnothing\) y se concluye que \(\Omega(f)\) es cerrado.
+
+	Para ver que es invariante, consideremos \(y = \Phi_{s}(x) \in \gamma(x)\) y \(V\) una
+	vecindad de \(y\). Luego, \(U = \Phi_{s-s=0}(V)\) es una vecindad de \(x\). Dado
+	que \(x\in \Omega(f)\) entonces existe una sucesión de tiempos \(t_n\to \infty\)
+	tal que \(\Phi_{t_n}(U) \cap U \ne \varnothing\). Aplicando \(\Phi_{s}\)
+	tenemos que \(\Phi_s(\Phi_{t_n}(U) \cap U) \ne \varnothing\) y en particular
+	\(\varnothing \ne \Phi_{s+t_n}(U) \cap \Phi_s(U) = \Phi_{t_n}(V) \cap V \).
+	Se concluye entonces que \(y\in \Omega(f)\).
+
+
+	\item Supongamos que \(x\) es un punto con órbita periódica. Luego, como
+	\(\Phi\colon I_x\times \left\{ x \right\}\to M\) es homeomorfismo, las
+	imágenes de abiertos son abiertos. En particular, para toda vecindad \(U\)
+	de \(x\) se tiene que \(\Phi_{nT(x)}(U) \cap U \ne \varnothing\) para todo
+	\(n\ge 0\). Tomando \(t_n = nT\to \infty\) se concluye que \(\gamma(x)
+	\subset \Omega(f)\).
+
+	Para los puntos fijos, cualquier sucesión de tiempos \(t_n \to \infty\)
+	sirve.
+
+	\item Sea \(y\in \omega_{+}(x)\). Sea \(y\in V\) una vecindad de \(y\).
+	Luego, para toda sucesión \(t_n \to \infty\) existe un \(N\in \mathbb{N}\) tal
+	que \(\Phi_{t_n}(x)\in V\) para todo \(n\ge N\). En particular,
+	\(\Phi_{t_n}(V) \cap V \ne \varnothing\) para todo \(n\ge N\), así que
+	\(y\in \Omega(f)\).
+\end{enumerate}
+
+Consideremos ahora el sistema dado por \((\dot{x},\dot{y}) = (y,-x)\). El único
+punto fijo es el \((0,0)\). Además, si \(\dot{x} = 0\) entonces \(y = x = 0\) y
+si \(\dot{y} = 0\) entonces \(y = x = 0\). Por lo tanto, no hay curvas que sean
+completamente verticales ni horizontales. Consideremos el sistema matricial
+asociado
+\[
+	\begin{pmatrix} \dot{x} \\ \dot{y} \end{pmatrix}
+	=
+	\begin{pmatrix}
+	0 & 1\\
+	-1 & 0
+	\end{pmatrix}
+	\begin{pmatrix} x \\ y \end{pmatrix}
+.\]
+Los valores propios son \(\pm i\), así que las soluciones son
+periódicas. Se concluye entonces que \(\Omega(f) = \mathbb{R}^2\).
+
+% P3
+\begin{problema}
+{\hfill G. Teschl - Problem 6.16}\\
+	Considere el sistema
+	\begin{align*}
+		\dot{x} &= x - y - x(x^2+y^2) + \frac{xy}{\sqrt{x^2+y^2}}\\
+		\dot{y} &= x + y - y(x^2+y^2) - \frac{x^2}{\sqrt{x^2+y^2}}
+	\end{align*}
+	Muestre que \((1,0)\) no es estable aunque satisface
+	\[
+		\lim_{t\to \infty} \abs{\phi(t,x) - (1,0)} = 0
+		\quad\forall x\in U((1,0))
+	.\]
+
+	\textit{Hint}: Muestre que el sistema en coordenadas polares está dado por
+	\(\dot{r} = r(1-r^2)\), \(\dot{\theta} = 2\sin^2(\theta/2)\).
+\end{problema}
+Sea \(x=r\cos(\theta)\) y \(y = r\sin(\theta)\). Luego,
+\[
+	r^2 = x^2 + y^2
+	\Rightarrow
+	\dot{r} r = x\dot{x} + y\dot{y}
+	\implies
+	\dot{r} r = r^3 - r^4
+.\]
+Por otro lado,
+\[
+	\tan(\theta) = \frac{y}{x}
+	\Rightarrow
+	\dot{\theta} \sec^2(\theta) = \frac{\dot{y}x - \dot{x}y}{x^2}
+	\Rightarrow
+	\dot{\theta} = 1 - \cos(\theta) = 2\sin^2(\theta/2)
+.\]
+En resumen, el sistema equivalente es
+\[
+	\dot r = r(1-r^2) \hspace{.5cm} \dot \theta = 2\sin^2(\theta/2)
+.\]
+
+Evaluando en \(1,0)\), vemos que es un punto fijo. Analizando las nullclinas
+(en las zonas de interés) tenemos que
+\[
+	\dot r = 0 \iff r = 0 \lor r = 1
+	\hspace{2cm}
+	\dot \theta = 0 \iff \theta = 4\pi \lor \theta = 0
+.\]
+
+Miremos la vecindad del punto \((1,0)\). Si \(r < 1\), \(\dot r > 0\) así que las
+soluciones se alejan del origen. Lo contrario pasa para \(r> 1\), aquí \(\dot r
+< 0\) y las soluciones se acercan al origen. En \(r=1\) la solución se mantiene
+a una distancia constante. Por otro lado, \(\dot \theta > 0\) así
+que las soluciones giran de manera antihoraria. La intuición es que las
+soluciones no son estables, pues se escapan de cualquier vecindad de \((1,0)\)
+pero órbitan asintóticamente a la órbita circular.
+
+Para probar la intuición, usaremos el teorema de Poincaré-Bendixson.
+Consideremos la región \(1 \le r \le 1+\epsilon\) para \(\epsilon > 0\)
+suficientemente pequeño, dado que \(\dot r < 0\) las soluciones se mantienen
+encerradas en el anillo (no pueden pasar por \(r=1\) pues las trayectorias
+serían perpendiculares con el campo vectorial) y no hay puntos fijos en el
+interior de la región, se concluye por el teorema que las soluciones tienden a una órbita
+cerrada. De esta forma, las soluciones dan vuelta en anillo y vuelven al \((1,0)\).
+El análisis para \(1-\epsilon \le r \le 1\) es análogo.
+
+% P4
+\begin{problema}
+	Considere el sistema
+	\[
+		\dot{x} = x^2 - x - y, \quad \dot{y} = x
+	.\]
+	\begin{enumerate}[label=(\alph*)]
+		\item Demuestre que el origen es \textit{asintóticamente} estable
+		construyendo una función de Liapunov estricta.
+
+		\item Demuestre que el origen es, de hecho, \textit{exponencialmente}
+		estable a través del criterio de linealización.
+	\end{enumerate}
+\end{problema}
+Consideremos una función de la forma \(L(x,y) = x^2 + axy + by^2\), queremos que
+la función \(L\) tenga un mínimo local en el origen, por lo que
+\[
+	DL(x,y) = (2x+ay, ax + 2by)
+	\hspace{1cm}
+	D^2 L(x,y) =
+	\begin{pmatrix}
+	2 & a\\ a & 2b
+	\end{pmatrix}
+\]
+Deben cumplir con \(DL(0,0) = 0\) y \(D^2L(x,y)\) debe ser definida positiva. Por el criterio
+de Sylvester, \(4b-a^2 > 0\) garantiza lo segundo. Eligiendo \(a=1\) podemos
+tomar \(b = 3/4\) y la desigualdad sigue valiendo. Luego, una función de Liapunov es
+\(L(x,y) = x^2 + xy + (3/4)y^2\) que es estricta por la elección de \(a\) y \(b\).
+
+
+Viendo el sistema linealizado, tenemos que
+\[
+	Df(x,y) =
+	\begin{pmatrix}
+	2x-1 & -1\\ 1 & 0
+	\end{pmatrix}
+	\implies
+	Df(0,0)
+	=
+	\begin{pmatrix}
+	-1 & -1\\ 1 & 0
+	\end{pmatrix}
+.\]
+Los valores propios son \(\frac{-1\pm \sqrt{-3}}{2}\), que tienen parte real
+negativa, así que el punto fijo es exponencialmente estable.
+
+% P5
+\begin{problema}
+	El péndulo con fricción está descrito por
+	\[
+		\ddot x = - \eta \dot x - \sin(x), \quad \eta > 0
+	.\]
+	¿Está la energía conservada en este caso? Muestre que la energía puede ser
+	usada como una función de Liapunov y pruebe que el punto fijo \((\dot x,
+	x) = (0,0)\) es (\textit{asintóticamente}) estable. ¿Cómo cambia el retrato de fase?
+\end{problema}
+La ecuación de la energía es
+\[
+	E(x,\dot x) = \frac{\dot{x}^2}{2} + 1 - \cos(x)
+.\]
+Derivando con respecto a \(t\) vemos que
+\[
+	\dot{E} = \dot{x}\ddot{x} + \dot{x} \sin(x) = -\eta \dot{x}^2
+.\]
+Como \(E(0,0) = 0\) y \(E(x,\dot{x}) > 0\) para \((x,\dot x) \ne 0\). Concluimos
+que \(E\) es una función de Liapunov para el sistema. Por otro lado, el computo
+anterior muestra que la derivada es estrictamente decreciente, así que no pueden
+haber órbitas periódicas regulares. Se sigue que el sistema es asintóticamente
+estable.
+
+Para ver el retrato de fase, primero escribamos el sistema como uno de primer
+orden de la siguiente forma:
+\[
+	\dot x = y \hspace{1cm} \dot y = -\eta y - \sin(x)
+.\]
+El Jacobiano del sistema es
+\[
+	Df(x,y)
+	=
+	\begin{pmatrix}
+	0 & 1\\
+	-\cos(x) & -\eta
+	\end{pmatrix}
+	\Rightarrow
+	Df(0,0)
+	=
+	\begin{pmatrix}
+	0 & 1\\
+	-1 & -\eta
+	\end{pmatrix}
+.\]
+Viendo el polinomio característico, los valores propios están dados por
+\[
+	\lambda = \frac{-\eta \pm \sqrt{\eta^2 - 4}}{2}
+.\]
+Analicemos los distintos casos.
+\begin{itemize}
+	\item Si \(\eta \in (0,2)\), entonces los valores propios son complejos con
+	parte real negativa, por lo tanto el origen es un sumidero espiral.
+
+	\item Si \(\eta = 2\), entonces \(\lambda = \pm 1\) y el origen es una
+	silla.
+
+	\item Si \(\eta > 2\), entonces los valores propios son reales negativos,
+	así que el origen es un sumidero.
+\end{itemize}
+
+% P6
+\begin{problema}
+	Analice el sistema competitivo dado por
+	\[
+	\begin{cases}
+		\dot x &= (1-y-\lambda x) x,\\
+		\dot y &= \alpha (1-x-\mu y)y
+	\end{cases}
+	\hspace{1cm}
+	\alpha, \lambda, \mu > 0
+	.\]
+	En el primer cuadrante (\(x,y\ge 0\)) siguiendo la exposición dada en el
+	capítulo 7.1 de Teschl.
+	\begin{enumerate}
+		\item Encuentre conjuntos invariantes.
+
+		\item Determine las dos \textit{nullclinas} y úselas para determinar el
+		sentido del campo vectorial en el primer cuadrante \(Q\) (note que las
+		nullclinas dividen \(Q\) en regiones donde el signo de cada componente
+		del campo vectorial no cambia).
+
+		\item Encuentre los puntos fijos del sistema y estudie su estabilidad
+		(en términos de los parámetros del problema).
+
+		\item Dibuje el retrato de fase (\textit{sugerencia:} Lema 7.2 será
+		útil).
+	\end{enumerate}
+\end{problema}
+Comenzaremos mirando las nullclinas.
+\[
+	\begin{cases}
+		\dot x = 0 &\iff x = 0 \lor y = 1-\lambda x\\
+		\dot y = 0 &\iff y = 0 \lor y = \frac{1-x}{\mu}
+	\end{cases}
+.\]
+Por otro lado, los puntos fijos son \((0,0), (0,1/\mu), (1/\lambda, 0)\) y
+\((\frac{\mu-1}{\lambda\mu - 1}, \frac{\lambda - 1}{\lambda\mu -1})\). Notemos que
+si \(\lambda \mu > 1\), entonces \(\mu > 1\) y \(\lambda > 1\). Mientras que si
+\(\lambda\mu < 1\), entonces \(\mu < 1\) y \(\lambda < 1\).
+
+La derivada de \(f\) está dada por
+\[
+	Df(x,y) =
+	\begin{pmatrix}
+	1-y-2\lambda x & -x\\
+	-\alpha x & \alpha (1-x-2\mu y)
+	\end{pmatrix}
+.\]
+
+Evaluando en los puntos fijos
+\begin{itemize}
+	\item En \(x*=(0,0)\) se tiene que
+	\[
+	Df(x*) =
+	\begin{pmatrix}
+	1 & 0\\
+	0 & \alpha
+	\end{pmatrix}
+	.\]
+	Como los valores propios son positivos, el punto es una fuente.
+
+	\item En \(x*=(0,1/\mu)\) se tiene que
+	\[
+	Df(x*) =
+	\begin{pmatrix}
+	1-\frac{1}{\mu} & 0\\
+	0 & -\alpha
+	\end{pmatrix}
+	.\]
+	Aquí, si \(\mu > 1\) los valores propios tienen signo opuesto y tenemos una
+	silla. Si \(\mu < 1\) los valores propios negativos y el punto es un
+	sumidero.
+
+	\item En \(x*=(1/\lambda, 0)\) se tiene que
+	\[
+		Df(x*) =
+		\begin{pmatrix}
+		-1 & -1/\lambda\\
+		-\alpha/\lambda & \alpha(1-1/\lambda)
+		\end{pmatrix}
+	.\]
+	Aquí la traza \(T = \alpha - \alpha/\lambda - 1\) y el determinante \(D =
+	-\alpha(1 - \frac{1}{\lambda} + \frac{1}{\lambda^2})\). Dado que
+	\[
+		D = 0 \implies \lambda = \frac{1\pm \sqrt{3}i}{2}
+	.\]
+	Se deduce que el determinante es siempre negativo. Así que tenemos una
+	silla.
+
+	\item En \(x*=(\frac{\mu-1}{\lambda\mu-1},
+	\frac{\lambda-1}{\lambda\mu-1})\) se tiene que
+	\begin{align*}
+		Df(x*)
+		&=
+		\frac{1}{\lambda\mu-1}
+		\begin{pmatrix}
+		\lambda\mu-1 - (\lambda-1) - 2\lambda(\mu-1) & -(\mu-1)\\
+		-\alpha(\mu-1) & \alpha((\lambda\mu-1) - (\mu-1) - 2\mu(\lambda-1))
+		\end{pmatrix}
+		\\&=
+		\frac{1}{\lambda\mu-1}
+		\begin{pmatrix}
+		\lambda(1-\mu) & -(\mu-1)\\
+		-\alpha(\mu-1) & \alpha\mu(1-\lambda)
+		\end{pmatrix}
+	\end{align*}
+	Después de las manipulaciones, la traza (\(T\)) y el determinante (\(D\))
+	dan
+	\begin{align*}
+	T &= -\alpha \frac{\lambda\mu+1}{\lambda\mu-1} +
+	\frac{\alpha\mu+\lambda}{\lambda\mu-1}\\
+	D &=
+	\left(\frac{1}{\lambda\mu-1}\right)^2 \alpha
+	\left[\lambda\mu(1-\mu)(1-\lambda) - (1-\mu)^2\right]
+	\\&=
+	\left(\frac{1}{\lambda\mu-1}\right)^2 \alpha(1-\mu)
+	\left[\lambda\mu(1-\lambda) - (1-\mu)\right]
+	\end{align*}
+\end{itemize}
+
+% P7
+\begin{problema} (\texttt{Oscilador glucolítico})~
+	Las células vivas obtiene energía al descomponer el azúcar en un proceso
+	llamado \textit{glucólisis}. La glucólisis puede proceder de manera
+	oscilatoria, con la concentración de varios compuestos químicos intermedios
+	aumentando y disminuyendo en un período de varios minutos. El siguiente
+	sistema es un modelo idealizado de la evolución de la concentración \(x_1\)
+	de ADP (adenosina difosfato) y la concentración \(x_2\) de F6P
+	(fructosa-6-fosfato).
+	\[
+		\begin{cases}
+			\dot x_1 &= -x_1 + ax_2 + x_1^2 x_2\\
+			\dot x_2 &= b - ax_2 - x_1^2 x_2
+		\end{cases}
+		\hspace{1cm}
+		a,b>0
+	.\]
+	En este problema demostrará que para \(a=0.1\) y \(b=0.5\) el sistema admite
+	una órbita periódica en el primer cuadrante \(Q\coloneqq \left\{ x_1, x_2 >
+	0 \right\}\).
+
+	\begin{enumerate}[label=(\alph*)]
+		\item Encuentre el único punto fijo del sistema y demuestre que es una
+		fuente.
+
+		\item Encuentre las nullclinas y úselas para dividir el primer cuadrante
+		en regiones donde el campo vectorial apunta NE, SE, SO, NO.
+
+		\item Identifique un subconjunto compacto \(\mathcal{R}\) de
+		\(\overline{Q}\) que sea \((+)\)-invariante y no tenga puntos fijos.
+		Concluya que \(\mathcal{R}\) contiene una órbita periódica.
+		(\textit{Sugerencia:} Note que \(f(x)\cdot (1,1) = b - x_1\))
+	\end{enumerate}
+\end{problema}
+
+Veamos el punto fijo
+\[
+	f(x) = 0 \iff
+	\begin{cases}
+	-x_1 + x_2/10 + x_1^2 x_2 &= 0\\
+	1/2 - x_2/10 - x_1^2 x_2 &= 0
+	\end{cases}
+	\iff
+	\begin{pmatrix} x_1 \\ x_2 \end{pmatrix}
+	=
+	\begin{pmatrix} 1/2 \\ 10/7 \end{pmatrix}
+.\]
+Viendo la derivada de \(f\) en el punto fijo \(x*\) tenemos que
+\[
+	Df(x*)
+	=
+	\begin{pmatrix}
+	3/7 & 7/20\\
+	-10/7 & -7/20
+	\end{pmatrix}
+.\]
+La traza \(T = 11/140\) y el determinante \(D = 7/20\) son positivos y se cumple
+que \(T^2 < 4D\), así que el punto es una fuente.
+
+Ahora veamos las nulclinas,
+\[
+	\begin{cases}
+		\dot x_1 = 0 & \iff x_2 = \frac{x_1}{x_1^2 + 1/10} \eqqcolon L_1\\
+		\dot x_2 = 0 & \iff x_2 = \frac{1}{2(x_1^2 + 1/10)} \eqqcolon L_2
+	\end{cases}
+.\]
+También miremos los ejes para tener una idea del campo vectorial.
+\[
+	\begin{cases}
+		x_1 = 0&\implies \dot x_1 = x_2/10 \land \dot x_2 = \frac{1}{2} -
+		\frac{x_2}{10}\\
+		x_2 = 0&\implies \dot x_1 = -x_1 \land \dot x_2 = b
+	\end{cases}
+.\]
+Se sigue que en el eje vertical, el punto \(5\) es un punto estable (debajo de
+\(5\) el campo apunta hacia arriba y por sobre \(5\) apunta hacia abajo) y el campo
+vectorial apunta hacia la derecha. Mientras tanto, en el eje horizontal, el
+campo apunta a la izquierda y arriba.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.5,domain=0:4, smooth]
+	\draw[->] (0,0) -- (4,0) node[below] {\(x_1\)};
+	\draw[->] (0,0) -- (0,6) node[left] {\(x_2\)};
+
+	\draw[dashed] (.5, 6) -- (.5,-.1) node[below] {\small \(0.5\)};
+
+	\draw[<-,very thick,purple] (0,5.2) -- (0,6);
+	\draw[->,very thick,purple] (0,5.6) -- (.2,5.6);
+
+	\draw[->,very thick,purple] (0,2.5) -- (0,3.5);
+	\draw[->,very thick,purple] (0,3) -- (.2,3);
+
+	\draw[<-<,very thick,purple] (.5,0) -- (2.5,0);
+	\draw[->,very thick,purple] (1.2,0) -- (1.2,.2);
+
+	\draw[red,thick] plot (\x, {\x/(\x^2+0.1)}) node[right] {\(L_1\)};
+	\draw[blue, thick] plot (\x, {1/(2*(\x^2+0.1))}) node[right] {\(L_2\)};
+
+	\node at (1.2,1.5) {\(Q_1\)};
+	\node at (.2,1.8) {\small\(Q_2\)};
+	\node at (.3,.5) {\(Q_3\)};
+	\node at (1.5,.5) {\(Q_4\)};
+\end{tikzpicture}
+\caption{En la curva roja los vectores son verticales y en la curva azul son
+horizontales.}
+\end{figure}
+
+Veamos la dirección del campo vectorial en las distintas regiones.
+\begin{itemize}
+	\item \(Q_1\): \(\dot y < 0\) y \(\dot x > 0\), así que apunta \(SE\).
+	\item \(Q_2\): \(\dot y > 0\) y \(\dot x > 0\), así que apunta \(NE\).
+	\item \(Q_3\): \(\dot y > 0\) y \(\dot x < 0\), así que apunta \(NO\).
+	\item \(Q_4\): \(\dot y < 0\) y \(\dot x < 0\), así que apunta \(SO\).
+\end{itemize}
+
+Para \(x_1 \to \infty\), vemos que \(\dot x_1 \approx x_1^2\) y \(\dot x_2
+\approx -x_1^2\), así que \(dx_1/dx_2 \approx -1\). Esto sugiere que el campo
+vectorial eventualmente apunta SE. Comprobando la intuición vemos que
+\[
+	f(x)\cdot (1,1)
+	=
+	(-x_1 + x_2/10 + x_1^2 x_2, 1/2 - x_2/10 - x_1^2 x_2)\cdot(1,1)
+	=
+	1/2 - x_1
+,\]
+y por lo tanto para \(x_1 = 1/2\) el campo vectorial tiene pendiente SE, más
+aún, para \(x_1 > 1/2\) las trayectorias tienen pendiente menor a \(-1\), así
+que cualquier recta \(L\) de pendiente \(-1\) que esté por sobre el punto fijo tenemos
+una región \(R\) atrapadora delimitada por la recta \(L\), la vertical \(x_1 =
+1/2\) y la curva \(L_2\) (en azul); La cual es compacta (cerrada y acotada),
+(\(+\))-invariante, y no tiene puntos fijos. Por Poincaré-Bendixson se concluye que
+\(R\) contiene órbitas periodicas.
+\end{document}

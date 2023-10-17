@@ -1,0 +1,166 @@
+\input{../pheader}
+
+%\newgeometry{margin=1.3in}
+
+\begin{document}
+
+{\sc Ayudantía 5 - EDO \hfill \small \rm Apuntes: Sebastian Sánchez}
+
+\begin{center}
+    \begin{tabular}{rl}
+        Docente:& Nikola Kamburov\\
+        Ayudante:& Jorge Acuña
+    \end{tabular}
+\end{center}
+
+% P1
+\begin{problema}
+Halle la solución del siguiente sistema de ecuaciones diferenciales
+\[
+    y'
+    =
+    \begin{pmatrix}
+    1 & 1 & 1 \\
+    1 & 1 & 1 \\
+    1 & 1 & 1
+    \end{pmatrix}
+    y
+.\]
+\end{problema}
+% R1
+Sabemos que la solución al sistema viene dada por el propagador \(\exp(tA)\).
+Recordando que:
+\[
+    \exp(tA) = \sum_{n=0}^\infty \frac{t^n A^n}{n!}
+\]
+y notando que \(A^n = 3^{n-1} A\) nos da:
+\begin{align*}
+    \exp(tA)
+    &=
+    I + \frac{1}{3} \sum_{n=1}^{\infty} \frac{(3t)^n }{n!} A
+    \\&=
+    I + \frac{1}{3} \sum_{n=0}^{\infty} \frac{(3t)^n }{n!} A - \frac{1}{3} A
+    \\&= I + \frac{1}{3} e^{3t} A  - \frac{1}{3} A
+\end{align*}
+
+% P2
+\begin{problema}
+Encuentre explícitamente la solución del sistema
+\[
+    y'(t) =
+    \begin{pmatrix}
+    3 & 1\\
+    -1 & 5
+    \end{pmatrix} y(t)
+    +
+    t
+    \begin{pmatrix} e^{-4t} \\ e^{-4t} \end{pmatrix}
+.\]
+\end{problema}
+% R2
+Resolveremos el sistema homogéneo y luego usaremos la fórmula de Duhamel.
+
+Veamos el caso homogéneo. La solución aquí está dada por el propagador
+\(e^{tA}\) donde
+\[
+    A =
+    \begin{pmatrix}
+    3 & 1\\
+    -1 & 5
+    \end{pmatrix}
+.\]
+Vamos a calcular la forma canónica de Jordan. Para los valores propios vemos el
+polinomio característico
+\[
+    \chi(z)
+    =
+    \det(zI - A)
+    =
+    (z-3)(z-5) + 1
+    =
+    (z-4)^2
+.\]
+Así que el único valor propio es \(4\) con multiplicidad 2. Para los vectores
+propios
+\begin{align*}
+    Av_1 = 4v_1 &\implies (1,1)\\
+    (A-4I)v_2 = v_1 &\implies (0,1)
+\end{align*}
+De esta forma,
+\[
+    A
+    =
+    \underbrace{\begin{pmatrix} 1 & 0\\ 1 & 1 \end{pmatrix}}_{V}
+    \underbrace{\begin{pmatrix} 4 & 1\\ 0 & 4 \end{pmatrix}}_{A_j}
+    \underbrace{\begin{pmatrix} 1 & 0\\-1 & 1 \end{pmatrix}}_{V^{-1}}
+.\]
+Así que
+\[
+    y_h(t) =
+    V
+    \begin{pmatrix} e^{4t} & t e^{4t}\\ 0 & e^{4t} \end{pmatrix}
+    V^{-1}
+    =
+    e^{4t} \begin{pmatrix} 1-t & t \\ 2-t & t+1 \end{pmatrix}
+.\]
+
+Aplicando la fórmula de Duhamel obtenemos que
+\begin{align*}
+    y(t)
+    &=
+    \int_{t_0}^{t} e^{(t-s)A} f(s) ds + e^{(t-t_0)A} y_0
+    \\&=
+    \int_{t_0}^{t}
+    \begin{pmatrix} 1-t+s & t-s\\ 2-t+s & t-s+1\end{pmatrix}
+    \begin{pmatrix} e^{-4s} \\ e^{-4s} \end{pmatrix}
+    ds
+    +
+    e^{(t-t_0)A}y_0
+    \\&=
+    \int_{t_0}^{t} e^{-4s} \begin{pmatrix} 1\\ 3 \end{pmatrix}ds
+    +
+    \begin{pmatrix}
+    1-t+t_0 & t-t_0\\
+    2-t+t_0 & t-t_0+1
+    \end{pmatrix}
+    y_0
+\end{align*}
+
+% P3
+\begin{problema}
+Considere el sistema:
+\[
+    \dot{x}_1 = x_2
+    \hspace{1cm}
+    \dot{x}_2 =
+    \begin{cases}
+        \frac{6 x_1}{t^2} &, t\ne0\\
+        0 &, t=0
+    \end{cases}
+.\]
+Demuestre que
+\[
+    f_1(t) = (t^3, 3t^2)
+    \hspace{1cm}
+    f_2(t) = (\abs{t}^3, 3t^2\sigma(t))
+\]
+son soluciones del sistema (\(\sigma\) es la función signo).
+
+Muestre que \(\left\{ f_1, f_2 \right\}\) son linealmente independientes en
+\(\mathbb{R}\), pero \(W(t) = 0\) para todo \(t\in \mathbb{R}\).
+¿Por qué esto no contradice el criterio de independencia lineal de las
+soluciones del sistema?
+\end{problema}
+% R3
+
+% P4
+\begin{problema}
+Sean \(A,B \in \mathbb{R}^{k\times k}\) con \(k\in \mathbb{N}\). Demuestre que,
+para \(t\in \mathbb{R}\):
+\[
+    e^{t(A+b)} = e^{tA}e^{tB}
+    \iff
+    AB = BA
+.\]
+\end{problema}
+\end{document}
